@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daily Device: Infinix NOTE 30 & ThinkPad T470s</title>
+  <meta name="description" content="Landing page interaktif ala web resmi untuk menampilkan device harian: Infinix NOTE 30 dan Lenovo ThinkPad T470s dengan animasi scroll, parallax, dan section spesifikasi lengkap." />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================
+       THEME — Variables (Dark Neon)
+       ========================================================= */
+    :root {
+      --bg-0: #06080f;           /* deepest background */
+      --bg-1: #0a0f1f;           /* hero background */
+      --bg-2: #0d1326;           /* section background */
+      --card: #121a30;           /* card background */
+      --card-2: #0f172a;         /* alternate card background */
+      --text: #e5f0ff;           /* primary text */
+      --muted: #95a3bf;          /* muted text */
+      --border: #233047;         /* subtle border */
+      --glow-1: #40d3ff;         /* cyan glow */
+      --glow-2: #7c4dff;         /* purple glow */
+      --accent-infinix: #39c6ff; /* Infinix cyan */
+      --accent-thinkpad: #e60012;/* ThinkPad red */
+      --accent-gold: #ffd166;    /* subtle highlight */
+      --ok: #22c55e;             /* green */
+      --warn: #f59e0b;           /* amber */
+      --err: #ef4444;            /* red */
+
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+
+      --shadow-1: 0 10px 40px rgba(0,0,0,.55);
+      --shadow-2: 0 14px 60px rgba(0,0,0,.65);
+      --ring-neo: 0 0 0 1px rgba(64, 211, 255, .25), 0 0 24px rgba(64, 211, 255, .2), 0 0 60px rgba(124, 77, 255, .15);
+
+      --container: 1200px;
+    }
+
+    /* =========================================================
+       RESET + BASE
+       ========================================================= */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(64,211,255,.12), transparent 60%),
+                  radial-gradient(800px 400px at 20% 10%, rgba(124,77,255,.12), transparent 60%),
+                  linear-gradient(180deg, var(--bg-1), var(--bg-0));
+      color: var(--text);
+    }
+    img { max-width: 100%; display: block; }
+    a { color: var(--accent-infinix); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* =========================================================
+       UTILS
+       ========================================================= */
+    .container { width: min(100% - 32px, var(--container)); margin-inline: auto; }
+    .section { padding: 80px 0; position: relative; }
+    .section--tight { padding: 48px 0; }
+    .grid { display: grid; gap: 24px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 960px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    }
+
+    .title { font-size: clamp(28px, 3.2vw, 48px); line-height: 1.2; letter-spacing: .2px; }
+    .subtitle { color: var(--muted); font-size: clamp(14px, 1.4vw, 18px); }
+    .eyebrow { color: var(--accent-gold); text-transform: uppercase; letter-spacing: 1.6px; font-weight: 700; font-size: 12px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 10px; padding: 14px 18px; border-radius: 999px; border: 1px solid var(--border); background: linear-gradient(180deg, #101729, #0b1222); color: var(--text); box-shadow: var(--shadow-1); transition: .25s ease; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 16px 40px rgba(64,211,255,.12); border-color: rgba(64,211,255,.35); }
+    .btn--infinix { background: linear-gradient(180deg, #0b1926, #0d2236); border-color: rgba(57,198,255,.35); box-shadow: 0 0 0 1px rgba(57,198,255,.25), 0 16px 40px rgba(57,198,255,.12); }
+    .btn--thinkpad { background: linear-gradient(180deg, #1a0b0d, #260d10); border-color: rgba(230,0,18,.35); box-shadow: 0 0 0 1px rgba(230,0,18,.25), 0 16px 40px rgba(230,0,18,.18); }
+
+    .tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 999px; font-size: 12px; border: 1px solid var(--border); color: var(--muted); background: linear-gradient(180deg, #0e162a, #0b1220); }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-1);
+      overflow: hidden;
+      position: relative;
+    }
+    .card__body { padding: 22px 22px 18px; }
+    .card__title { font-size: 18px; margin: 0 0 6px; letter-spacing: .3px; }
+    .card__meta { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+
+    .spec-list { list-style: none; padding: 0; margin: 14px 0 0; display: grid; gap: 10px; }
+    .spec-list li { display: grid; grid-template-columns: 26px 1fr; align-items: start; gap: 10px; }
+    .spec-ico { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; background: rgba(64,211,255,.08); box-shadow: 0 0 0 1px rgba(64,211,255,.15); }
+    .spec-ico--red { background: rgba(230,0,18,.08); box-shadow: 0 0 0 1px rgba(230,0,18,.16); }
+
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: 12px; padding: 2px 6px; border-radius: 6px; background: #0b1424; border: 1px solid #1d2a42; color: #cbe6ff; }
+
+    /* =========================================================
+       NAVBAR (Glass)
+       ========================================================= */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, rgba(10,15,31,.7), rgba(10,15,31,.4));
+  border-bottom: 1px solid rgba(64,211,255,.12);
+  transform: translateY(0);                /* default muncul */
+  transition: transform 0.3s ease-in-out;  /* smooth animasi */
+  will-change: transform;
+    }
+    .nav__wrap { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand__logo { width: 34px; height: 34px; border-radius: 10px; background: radial-gradient(circle at 30% 30%, var(--glow-1), transparent 60%), linear-gradient(180deg, #0e1a2e, #0b1424); box-shadow: var(--ring-neo); }
+    .brand__name { font-weight: 700; letter-spacing: .4px; }
+
+    .nav__links { display: flex; align-items: center; gap: 12px; }
+    .nav__links a { padding: 10px 14px; border-radius: 999px; border: 1px solid transparent; }
+    .nav__links a:hover { border-color: rgba(64,211,255,.25); background: rgba(64,211,255,.06); }
+
+    /* =========================================================
+       HERO (Split Showcase, Parallax)
+       ========================================================= */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(1400px 500px at 20% -10%, rgba(230,0,18,.14), transparent 60%),
+        radial-gradient(1200px 600px at 90% 10%, rgba(64,211,255,.18), transparent 60%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-0));
+         padding-top: 80px; /* 🚀 Biar gak ketiban navbar */
+    }
+    .hero__grid { width: min(100% - 32px, var(--container)); display: grid; grid-template-columns: 1.1fr .9fr; gap: 28px; align-items: center; }
+    @media (max-width: 980px) { .hero__grid { grid-template-columns: 1fr; padding: 40px 0; } }
+
+    .hero__left { position: relative; z-index: 2; }
+    .hero__eyebrow { margin-bottom: 10px; }
+    .hero__title { font-size: clamp(36px, 6vw, 68px); margin: 0 0 12px; }
+    .hero__subtitle { color: var(--muted); font-size: clamp(14px, 2vw, 18px); margin-bottom: 22px; }
+    .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .hero__right { position: relative; }
+    .device-stack {
+      position: relative;
+      transform-style: preserve-3d;
+      perspective: 1200px;
+    }
+    .device-card {
+      position: relative;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 16px;
+      box-shadow: var(--shadow-2);
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .device-card + .device-card { margin-top: 22px; }
+
+    .device-card__badge { position: absolute; top: 12px; left: 12px; z-index: 3; }
+    .device-card__img {
+      border-radius: calc(var(--radius-xl) - 10px);
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      background: #0b1424;
+      border: 1px solid rgba(255,255,255,.06);
+      position: relative;
+    }
+    .device-card__img img { width: 100%; height: 100%; object-fit: cover; }
+
+    .glow-ring { position: absolute; inset: -1px; border-radius: inherit; pointer-events: none; box-shadow: var(--ring-neo); opacity: .7; mix-blend-mode: screen; }
+
+    .device-card__meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+    .device-card__meta .name { font-weight: 700; }
+    .device-card__meta .brand { color: var(--muted); font-size: 13px; }
+
+    .parallax-fx { position: absolute; inset: 0; pointer-events: none; }
+    .orb { position: absolute; width: 220px; height: 220px; border-radius: 999px; filter: blur(40px); opacity: .5; }
+    .orb--cyan { background: radial-gradient(circle at 40% 40%, var(--glow-1), transparent 60%); right: -40px; top: -20px; }
+    .orb--magenta { background: radial-gradient(circle at 60% 60%, var(--glow-2), transparent 60%); left: -50px; bottom: -20px; }
+
+    /* =========================================================
+       SECTION: Infinix NOTE 30 — Feature Rows (scroll reveal)
+       ========================================================= */
+    .section--infinix { background: linear-gradient(180deg, rgba(57,198,255,.04), rgba(255,255,255,0) 60%); }
+    .feature-row { display: grid; grid-template-columns: .9fr 1.1fr; gap: 38px; align-items: center; }
+    .feature-row:nth-child(even) { grid-template-columns: 1.1fr .9fr; }
+    @media (max-width: 980px) { .feature-row, .feature-row:nth-child(even) { grid-template-columns: 1fr; } }
+
+    .feature-media { border-radius: var(--radius-xl); overflow: hidden; border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); box-shadow: var(--shadow-1); position: relative; }
+    .feature-media img { width: 100%; height: 100%; object-fit: cover; }
+    .feature-body .title { margin-bottom: 10px; color: var(--accent-infinix); }
+
+    .pill-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .pill { padding: 8px 12px; border-radius: 999px; background: rgba(57,198,255,.1); border: 1px solid rgba(57,198,255,.3); font-size: 13px; color: #c9eeff; }
+
+    /* =========================================================
+       SECTION: ThinkPad T470s — Cards + Spec Table
+       ========================================================= */
+    .section--thinkpad { background: linear-gradient(180deg, rgba(230,0,18,.04), rgba(255,255,255,0) 60%); }
+    .think-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 28px; align-items: start; }
+    @media (max-width: 980px) { .think-grid { grid-template-columns: 1fr; } }
+
+    .spec-table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-1); }
+    .spec-table th, .spec-table td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+    .spec-table th { background: linear-gradient(180deg, rgba(230,0,18,.12), rgba(230,0,18,.04)); color: #ffd7dc; letter-spacing: .4px; }
+    .spec-table tr:nth-child(odd) td { background: rgba(255,255,255,.02); }
+
+    .badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 999px; padding: 6px 10px; font-size: 12px; }
+    .badge--think { border-color: rgba(230,0,18,.35); color: #ffc9cf; background: rgba(230,0,18,.08); }
+
+    /* =========================================================
+       COMPARISON STRIP
+       ========================================================= */
+    .cmp-strip { background: linear-gradient(90deg, rgba(57,198,255,.12), rgba(124,77,255,.12)); border-top: 1px solid rgba(64,211,255,.18); border-bottom: 1px solid rgba(124,77,255,.18); }
+    .cmp-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    @media (max-width: 820px) { .cmp-grid { grid-template-columns: 1fr; } }
+
+    .cmp-card { padding: 18px; border: 1px solid var(--border); border-radius: var(--radius-md); background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); box-shadow: var(--shadow-1); }
+    .cmp-title { font-size: 18px; margin-bottom: 8px; }
+    .cmp-kpi { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .kpi { padding: 14px; border-radius: 14px; border: 1px solid var(--border); background: #0b1220; text-align: center; }
+    .kpi .v { font-size: 22px; font-weight: 700; }
+    .kpi .l { font-size: 12px; color: var(--muted); }
+
+    /* =========================================================
+       GALLERY (Lightbox w/ JS)
+       ========================================================= */
+.gallery { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 16px; 
+}
+
+@media (max-width: 780px) { 
+  .gallery { grid-template-columns: 1fr 1fr; } 
+}
+
+.gallery img { 
+  width: 100%; 
+  height: 220px; /* bikin tinggi seragam */
+  object-fit: cover; /* biar kecrop pas */
+  border-radius: 14px; 
+  border: 1px solid var(--border); 
+  cursor: zoom-in; 
+  transition: .25s ease; 
+}
+
+.gallery img:hover { 
+  transform: translateY(-4px); 
+  box-shadow: 0 16px 40px rgba(0,0,0,.4); 
+}
+
+    .lightbox { position: fixed; inset: 0; display: grid; place-items: center; background: rgba(0,0,0,.7); opacity: 0; pointer-events: none; transition: .3s ease; z-index: 90; }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox__img { max-width: 92vw; max-height: 86vh; border-radius: 16px; border: 1px solid var(--border); box-shadow: var(--shadow-2); }
+    .lightbox__close { position: absolute; top: 18px; right: 18px; background: #0b1424; border: 1px solid var(--border); color: var(--text); padding: 10px 14px; border-radius: 10px; cursor: pointer; }
+
+    /* =========================================================
+       REVEAL (Intersection Observer powered)
+       ========================================================= */
+    .reveal { opacity: 0; transform: translateY(28px) scale(.98); filter: saturate(.7); }
+    .reveal.revealed { opacity: 1; transform: none; filter: none; transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1), filter .6s ease; }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+    footer { padding: 48px 0 60px; color: var(--muted); border-top: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)); }
+    .credits { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+    /* =========================================================
+       EXTRA: A buncha fun glow/lines just for ✨
+       ========================================================= */
+    .gridlines { position: absolute; inset: 0; pointer-events: none; opacity: .08; background-image: linear-gradient(transparent 95%, rgba(255,255,255,.6) 96%), linear-gradient(90deg, transparent 95%, rgba(255,255,255,.6) 96%); background-size: 40px 40px; }
+    .scanline { position: absolute; inset-inline: 0; height: 2px; top: -2px; background: linear-gradient(90deg, transparent, rgba(64,211,255,.9), transparent); box-shadow: 0 0 20px rgba(64,211,255,.5); animation: scan 8s linear infinite; opacity: .35; }
+    @keyframes scan { 0% { transform: translateY(0); } 100% { transform: translateY(110vh); } }
+
+/* GLOBAL IMAGE CONTAINER */
+.device-card__img img,
+.feature-media img,
+.gallery img {
+  width: 100%;
+  object-fit: cover;
+  transition: transform .3s ease;
+}
+
+.device-card__img img:hover,
+.feature-media img:hover,
+.gallery img:hover {
+  transform: scale(1.05);
+  /* Hapus filter: brightness biar ringan */
+}
+
+/* Back khusus mobile */
+@media (max-width: 720px) {
+  .nav__links a {
+    display: none; /* sembunyiin semua link biar gak numpuk */
+  }
+  .nav__links a.back-link {
+    display: inline-block; /* cuma back yang nongol */
+    padding: 10px 16px;
+    background: var(--accent-thinkpad);
+    color: #fff;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+}
+
+/* Floating Back (optional kalau mau selalu muncul di pojok) */
+.back-float {
+  display: none;
+}
+@media (max-width: 720px) {
+  .back-float {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    z-index: 1000;
+    background: var(--accent-thinkpad);
+    color: #fff;
+    border-radius: 50%;
+    width: 54px;
+    height: 54px;
+    box-shadow: var(--shadow-2);
+    font-size: 20px;
+    text-decoration: none;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <!-- NAVBAR -->
+  <nav class="nav">
+    <div class="container nav__wrap">
+      <div class="brand">
+        <div class="brand__logo" aria-hidden="true"></div>
+        <div class="brand__name">Infinix X ThinkPad</div>
+      </div>
+      <div class="nav__links">
+        <a href="#infinix">Infinix NOTE 30</a>
+        <a href="#thinkpad">ThinkPad T470s</a>
+        <a href="#gallery">Galeri</a>
+        <a href="cvku.html" class="back-link">Back</a>
+
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="gridlines"></div>
+    <div class="scanline"></div>
+    <div class="container hero__grid">
+      <div class="hero__left">
+        <div class="hero__eyebrow eyebrow">Daily device</div>
+        <h1 class="hero__title">The KING: <span style="color:var(--accent-infinix)">Infinix NOTE 30</span> & <span style="color:var(--accent-thinkpad)">ThinkPad T470s</span></h1>
+        <p class="hero__subtitle">Spek lawas, performa ganas🔥.</p>
+        <div class="hero__cta">
+          <a href="#infinix" class="btn btn--infinix">Lihat NOTE 30</a>
+          <a href="#thinkpad" class="btn btn--thinkpad">Lihat T470s</a>
+        </div>
+      </div>
+      <div class="hero__right">
+        <div class="device-stack" data-parallax>
+          <!-- Infinix card -->
+          <div class="device-card reveal" style="transform: rotateX(2deg) rotateY(-6deg)">
+            <span class="device-card__badge tag">📱 Infinix NOTE 30</span>
+            <div class="device-card__img">
+              <img src="Untitled design (1).webp" alt="Infinix Note 30" loading="lazy" />
+              <div class="glow-ring"></div>
+            </div>
+            <div class="device-card__meta">
+              <div>
+                <div class="name">Note 30 (Helio G99)</div>
+                <div class="brand">All‑Round FastCharge • JBL</div>
+              </div>
+              <span class="tag">120Hz • NFC • IP53</span>
+            </div>
+          </div>
+          <!-- ThinkPad card -->
+          <div class="device-card reveal" style="transform: rotateX(4deg) rotateY(6deg)">
+            <span class="device-card__badge tag">💻 ThinkPad T470s</span>
+            <div class="device-card__img">
+              <img src="thinkpd.png" alt="Lenovo ThinkPad T470s" loading="lazy" />
+              <div class="glow-ring" style="box-shadow: 0 0 0 1px rgba(230,0,18,.18),0 0 24px rgba(230,0,18,.2),0 0 60px rgba(57,198,255,.14)"></div>
+            </div>
+            <div class="device-card__meta">
+              <div>
+                <div class="name">Core i7‑6600U • 8GB</div>
+                <div class="brand">SSD 256GB • HD 620</div>
+              </div>
+              <span class="tag" style="border-color: rgba(230,0,18,.35); color:#ffc9cf; background: rgba(230,0,18,.08)">FHD 14″ • Win 11</span>
+            </div>
+          </div>
+          <!-- FX -->
+          <div class="parallax-fx">
+            <div class="orb orb--cyan" data-depth="0.06"></div>
+            <div class="orb orb--magenta" data-depth="0.1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- INFINIX FEATURE SECTIONS -->
+  <section id="infinix" class="section section--infinix">
+    <div class="container">
+      <div class="feature-row reveal">
+        <div class="feature-media">
+          <img src="kingfinix.png" alt="Infinix Note 30 — Desain" />
+        </div>
+        <div class="feature-body">
+          <div class="eyebrow">Infinix NOTE 30</div>
+          <h2 class="title">120Hz Eye‑care Display & JBL Stereo</h2>
+          <p class="subtitle">6.78″ FHD+ 120Hz, 240Hz touch sampling, hingga 580 nits. Dual speaker by JBL + Hi‑Res nyaring dan jernih.</p>
+          <div class="pill-list">
+            <span class="pill">120Hz Smooth</span>
+            <span class="pill">Hi‑Res Audio</span>
+            <span class="pill">TÜV Eye‑care</span>
+            <span class="pill">Punch‑hole Display</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-row reveal">
+        <div class="feature-body">
+          <div class="eyebrow">All‑Round FastCharge 45W</div>
+          <h2 class="title">5000mAh + Bypass & Reverse Charge</h2>
+          <p class="subtitle">Isi 1–75% hanya 30 menit. Bypass Charge jaga suhu saat main game, dan bisa jadi powerbank buat device lain.</p>
+          <ul class="spec-list">
+            <li><div class="spec-ico">⚡</div><div>45W FastCharge • Reverse & Bypass Charge</div></li>
+            <li><div class="spec-ico">🔋</div><div>5000mAh • Smart Power E‑IQ</div></li>
+            <li><div class="spec-ico">📶</div><div>Ultra Powerful Signal UPS: Wi‑Fi +100%*</div></li>
+          </ul>
+        </div>
+        <div class="feature-media">
+          <img src="fc.jpg" alt="FastCharge Visual" />
+        </div>
+      </div>
+
+      <div class="feature-row reveal">
+        <div class="feature-media">
+          <img src="night.jpeg" alt="Kamera dan Night Mode" />
+        </div>
+        <div class="feature-body">
+          <div class="eyebrow">Kamera & Mode</div>
+          <h2 class="title">64MP Utama + 16MP Selfie</h2>
+          <p class="subtitle">Super Night, Street Mode, Dual View Video, dan Sky Remap. Jepret low‑light makin tajam.</p>
+          <div class="pill-list">
+            <span class="pill">64MP f/1.7</span>
+            <span class="pill">Dual‑View Video</span>
+            <span class="pill">Super Night</span>
+            <span class="pill">Sky Remap</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THINKPAD SPEC SECTION -->
+  <section id="thinkpad" class="section section--thinkpad">
+    <div class="container think-grid">
+      <div class="left reveal">
+        <div class="eyebrow">Lenovo ThinkPad T470s</div>
+        <h2 class="title" style="color:var(--accent-thinkpad)">Workhorse Tipis & Tangguh</h2>
+        <p class="subtitle">Core i7‑6600U, RAM 8GB, SSD 256GB, Intel HD 620. Layar 14″ FHD. OS: Windows 11. Build solid + keyboard mantap.</p>
+
+        <div class="grid grid-2" style="margin-top:20px">
+          <div class="card">
+            <div class="card__body">
+              <div class="card__title">Kinerja</div>
+              <div class="card__meta">Produktivitas multitasking</div>
+              <ul class="spec-list">
+                <li><div class="spec-ico spec-ico--red">🧠</div><div>Intel® Core™ i7‑6600U (2C/4T)</div></li>
+                <li><div class="spec-ico spec-ico--red">🧮</div><div>RAM 8GB</div></li>
+                <li><div class="spec-ico spec-ico--red">💾</div><div>SSD 256GB</div></li>
+              </ul>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card__body">
+              <div class="card__title">Visual</div>
+              <div class="card__meta">Nyaman kerja lama</div>
+              <ul class="spec-list">
+                <li><div class="spec-ico spec-ico--red">🖥️</div><div>14″ FHD (1920×1080)</div></li>
+                <li><div class="spec-ico spec-ico--red">🎨</div><div>Intel HD Graphics 620</div></li>
+                <li><div class="spec-ico spec-ico--red">⌨️</div><div>Keyboard ThinkPad + TrackPoint</div></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="right reveal">
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th colspan="2">Spesifikasi Inti</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Prosesor</td><td>Intel® Core™ i7‑6600U</td></tr>
+            <tr><td>GPU</td><td>Intel® HD Graphics 620</td></tr>
+            <tr><td>RAM</td><td>8 GB</td></tr>
+            <tr><td>Penyimpanan</td><td>SSD 512 GB</td></tr>
+            <tr><td>Layar</td><td>14″ FHD (1920×1080)</td></tr>
+            <tr><td>Sistem</td><td>Windows 11</td></tr>
+          </tbody>
+        </table>
+        <div style="height:16px"></div>
+        <div class="badge badge--think">💼 Sangat mantap untuk ngoding dan main Minecraft. </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON STRIP -->
+  <section class="section section--tight cmp-strip">
+    <div class="container cmp-grid">
+      <div class="cmp-card reveal">
+        <div class="cmp-title">Infinix NOTE 30 — Highlights</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="v">120Hz</div><div class="l">Layar</div></div>
+          <div class="kpi"><div class="v">45W</div><div class="l">FastCharge</div></div>
+          <div class="kpi"><div class="v">64MP</div><div class="l">Kamera</div></div>
+          <div class="kpi"><div class="v">JBL</div><div class="l">Audio</div></div>
+        </div>
+      </div>
+      <div class="cmp-card reveal">
+        <div class="cmp-title">ThinkPad T470s — Highlights</div>
+        <div class="cmp-kpi">
+          <div class="kpi"><div class="v">i7‑6600U</div><div class="l">CPU</div></div>
+          <div class="kpi"><div class="v">8GB</div><div class="l">RAM</div></div>
+          <div class="kpi"><div class="v">256GB</div><div class="l">SSD</div></div>
+          <div class="kpi"><div class="v">FHD</div><div class="l">14″</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="section">
+    <div class="container">
+      <div class="eyebrow">Galeri</div>
+      <h2 class="title">Galeri Thinkpad X Kingfinix</h2>
+      <p class="subtitle">Jadul? Utamakan fungsi🔥🔥.</p>
+      <div class="gallery" data-gallery>
+        <img src="front.jpg" alt="Infinix Note 30 depan" />
+        <img src="ambi.jpg" alt="Laptop ambience" />
+        <img src="think es.webp" alt="ThinkPad T470s" />
+        <img src="animm.webp" alt="Setup meja" />
+        <img src="key.webp" alt="Detail keyboard" />
+        <img src="kod.jpeg" alt="Coding vibes" />
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container credits">
+      <div>Perbudakan ChatGPT 🔥</div>
+      <div>
+        <span class="tag">Infinix NOTE 30</span>
+        <span class="tag">ThinkPad T470s</span>
+        <span class="tag">My device gw</span>
+      </div>
+    </div>
+  </footer>
+<a href="sinau.html" class="back-float">⟵</a>
+
+  <script>
+    // ==========================================================
+    // IntersectionObserver: reveal on scroll
+    // ==========================================================
+    const revealEls = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('revealed');
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => io.observe(el));
+
+    // ==========================================================
+    // Parallax: simple device stack parallax following cursor
+    // ==========================================================
+    const parallaxWrap = document.querySelector('[data-parallax]');
+    if (parallaxWrap) {
+      const depthNodes = parallaxWrap.querySelectorAll('[data-depth]');
+      parallaxWrap.addEventListener('pointermove', (e) => {
+        const rect = parallaxWrap.getBoundingClientRect();
+        const cx = rect.left + rect.width/2;
+        const cy = rect.top + rect.height/2;
+        const dx = (e.clientX - cx) / rect.width;
+        const dy = (e.clientY - cy) / rect.height;
+        depthNodes.forEach(node => {
+          const d = parseFloat(node.getAttribute('data-depth') || '0.05');
+          node.style.transform = `translate3d(${dx * d * 120}px, ${dy * d * 120}px, 0)`;
+        });
+      });
+    }
+
+    // ==========================================================
+    // Lightbox Gallery
+    // ==========================================================
+    const gallery = document.querySelector('[data-gallery]');
+    if (gallery) {
+      const lb = document.createElement('div');
+      lb.className = 'lightbox';
+      lb.innerHTML = `
+        <button class="lightbox__close" aria-label="Tutup">Tutup ✕</button>
+        <img class="lightbox__img" alt="Preview" />
+      `;
+      document.body.appendChild(lb);
+      const lbImg = lb.querySelector('.lightbox__img');
+      const lbClose = lb.querySelector('.lightbox__close');
+
+      gallery.querySelectorAll('img').forEach(img => {
+        img.addEventListener('click', () => {
+          lbImg.src = img.src;
+          lb.classList.add('open');
+        });
+      });
+      lb.addEventListener('click', (e) => { if (e.target === lb) lb.classList.remove('open'); });
+      lbClose.addEventListener('click', () => lb.classList.remove('open'));
+      window.addEventListener('keydown', (e) => { if (e.key === 'Escape') lb.classList.remove('open'); });
+    }
+    window.addEventListener('load', () => {
+  window.scrollTo({ top: 0, behavior: 'instant' }); // bisa 'smooth' kalau mau animasi
+});
+
+  
+  </script>
+<script>
+  const nav = document.querySelector('.nav');
+  let lastScroll = 0;
+
+  window.addEventListener('scroll', () => {
+    const currentScroll = window.scrollY;
+
+    if (currentScroll <= 0) {
+      nav.style.transform = 'translateY(0)';
+      return;
+    }
+
+    if (currentScroll > lastScroll && currentScroll > 80) {
+      // scroll turun → sembunyiin
+      nav.style.transform = 'translateY(-100%)';
+    } else if (currentScroll < lastScroll - 4) {
+      // scroll naik dikit → munculin
+      nav.style.transform = 'translateY(0)';
+    }
+
+    lastScroll = currentScroll;
+  });
+</script>
+
+
+
+ 
+<!-- 🎵 Music Player -->
+<div class="music-player" id="musicPlayer">
+  <div class="player-content">
+    <img src="on.jpeg" alt="Cover" class="cover">
+    <div class="song-info">
+      <h4>On & On</h4>
+      <p>Cartoon, Jéja, Daniel Levi</p>
+    </div>
+    <button class="play-pause" id="playPauseBtn">▶︎</button>
+    <button class="hide-btn" id="hideBtn">▬</button>
+  </div>
+</div>
+
+<!-- 🔘 Mini Circle Player -->
+<div class="mini-player hidden" id="miniPlayer">
+  <button id="miniToggle">▶︎</button>
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<!-- Import Core -->
+<link rel="stylesheet" href="assets/core.css">
+<script src="assets/core.js" defer></script>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+
+
+</body>
+</html>

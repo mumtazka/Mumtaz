@@ -1,0 +1,2790 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel-style Docs — Konfigurasi DNS & Web</title>
+    
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --accent: #ef4444;
+            --accent-hover: #dc2626;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border: #334155;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        
+        }
+
+        /* Header Styles */
+        .header {
+            margin-top: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .header {
+            background: rgba(15, 23, 42, 0.8);
+        }
+
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 2.25rem;
+            height: 2.25rem;
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .logo:hover .logo-icon {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: scale(1.05);
+        }
+
+        .logo-square {
+            width: 1.25rem;
+            height: 1.25rem;
+            background: white;
+            border-radius: 0.125rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-menu {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .nav-menu {
+                display: flex;
+            }
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-trigger {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .dropdown-trigger:hover {
+            color: var(--accent);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 18rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            box-shadow: var(--shadow-lg);
+            padding: 0.75rem;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-0.5rem);
+            transition: all 0.2s ease;
+            z-index: 100;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.15s ease;
+        }
+
+        .dropdown-item:hover {
+            background: var(--bg-primary);
+        }
+
+        .dropdown-item-content h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .dropdown-item-content p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-container {
+            display: none;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .search-container {
+                display: block;
+            }
+        }
+
+        .search-input {
+            width: 18rem;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            ring: 2px solid var(--accent);
+            border-color: var(--accent);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1rem;
+            height: 1rem;
+            color: var(--text-muted);
+        }
+
+        .theme-toggle, .mobile-menu-btn {
+            padding: 0.5rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover, .mobile-menu-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .mobile-menu-btn {
+            display: block;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-menu-btn {
+                display: none;
+            }
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .main-layout {
+            display: flex;
+             justify-content: space-between; /* sidebar kiri, toc kanan */
+            gap: 2rem;
+              min-height: 0; /* BARU DITAMBAH */
+        }
+
+        @media (min-width: 1024px) {
+            .main-layout {
+                gap: 2rem;
+            }
+        }
+/* Mobile Sidebar Version */
+.mobile-sidebar {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.mobile-sidebar .nav-items {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    margin-bottom: 0;
+}
+
+.mobile-sidebar .nav-item {
+    flex-shrink: 0;
+    width: auto;
+    min-width: 200px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+}
+
+.mobile-sidebar .nav-item.active {
+    border-left: none;
+    border-bottom: 3px solid var(--accent);
+    background: linear-gradient(0deg, rgba(239, 68, 68, 0.06) 0%, transparent 100%);
+}
+
+.mobile-sidebar .nav-item-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+}
+
+.mobile-sidebar .nav-item-text p {
+    display: none;
+}
+
+.mobile-sidebar .nav-item-badge {
+    display: none;
+}
+
+/* Sembunyikan desktop sidebar di mobile */
+@media (max-width: 1023px) {
+    .sidebar {
+        display: none;
+    }
+    
+    .mobile-sidebar {
+        display: block;
+    }
+}
+
+/* Tampilkan desktop sidebar di tablet/desktop */
+@media (min-width: 1024px) {
+    .sidebar {
+        display: block;
+    }
+    
+    .mobile-sidebar {
+        display: none;
+    }
+}
+        /* Sidebar */
+/* Sidebar default (desktop) */
+.sidebar {
+    width: 20rem;
+    position: sticky;
+    top: 6rem;
+    height: calc(100vh - 8rem);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1023px) {
+    .sidebar {
+        display: none; /* tetap sembunyi di HP */
+    }
+}
+
+
+        .sidebar-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .nav-item:hover {
+            transform: translateX(0.25rem);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(239, 68, 68, 0.06) 0%, transparent 100%);
+            border-left: 3px solid var(--accent);
+        }
+
+        .nav-item-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-item-icon {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: var(--bg-primary);
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active .nav-item-icon {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .nav-item-text h3 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .nav-item.active .nav-item-text h3 {
+            color: var(--accent);
+        }
+
+        .nav-item-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-item-badge {
+            font-size: 0.75rem;
+            padding: 0.125rem 0.5rem;
+            background: var(--bg-primary);
+            border-radius: 9999px;
+            color: var(--text-secondary);
+            margin-left: auto;
+        }
+
+        /* Quick Tips */
+        .quick-tips {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .quick-tips-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .quick-tips-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .tips-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .tip-item {
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .tip-dot {
+            width: 0.375rem;
+            height: 0.375rem;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-top: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .tip-code {
+            font-size: 0.75rem;
+            padding: 0.125rem 0.25rem;
+            background: var(--bg-primary);
+            border-radius: 0.25rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+
+        /* Main Content */
+        .content-area {
+            flex: 1;
+            display: flex;
+            gap: 2rem;
+            min-height: 0; /* BARU DITAMBAH */
+            overflow: visible;
+        }
+
+        .main-content {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+             min-height: 0; /* BARU DITAMBAH */
+        }
+
+        .content-header {
+    background: none;
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem;
+}
+
+
+        .content-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .content-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .content-meta {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-badge {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .status-badge {
+                display: flex;
+            }
+        }
+
+        .status-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .content-body {
+            padding: 1.5rem 2rem;
+               max-width: 100%; /* PASTIKAN tidak melebihi container */
+    overflow-x: hidden; /* HINDARI horizontal scroll */
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-intro {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-intro h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-intro p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Content Typography */
+        .content-body h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 2rem 0 1rem 0;
+            scroll-margin-top: 6rem;
+        }
+
+        .content-body ul {
+            list-style: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-body li {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        /* Code Blocks */
+        .code-block {
+            margin: 1.5rem 0;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+            background: var(--bg-primary);
+            overflow: hidden;
+              max-width: 100%; /* PASTIKAN code block tidak overflow */
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .code-title {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .code-lang {
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent);
+        }
+
+        .copy-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .copy-btn.copied {
+            color: var(--success);
+        }
+
+       .code-content {
+    padding: 1rem;
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.code-content pre {
+    font-family: 'Monaco', 'Consolas', 'Courier New', monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+    white-space: pre; /* tetep biar format baris ga pecah */
+    overflow-x: auto;
+    max-width: 100%;   /* ini penting biar ga bikin halaman melebar */
+}
+
+
+        /* Info Boxes */
+        .info-box {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid;
+        }
+
+        .info-box.blue {
+            background: rgba(59, 130, 246, 0.05);
+            border-color: #3b82f6;
+        }
+
+        .info-box.amber {
+            background: rgba(245, 158, 11, 0.05);
+            border-color: #f59e0b;
+        }
+
+        .info-box.green {
+            background: rgba(16, 185, 129, 0.05);
+            border-color: #10b981;
+        }
+
+        .info-box.purple {
+            background: rgba(139, 92, 246, 0.05);
+            border-color: #8b5cf6;
+        }
+
+        .info-box h4 {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .info-box ul {
+            margin: 0;
+        }
+
+        .info-box li {
+            color: var(--text-secondary);
+        }
+
+        .info-box code {
+            font-size: 0.75rem;
+            padding: 0.125rem 0.5rem;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 0.25rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+        }
+
+        /* Table of Contents */
+     .toc {
+    width: 16rem;
+    position: sticky;
+    top: 6rem;
+    height: calc(100vh - 8rem);
+    overflow-y: auto;
+    flex-shrink: 0;
+    /* HAPUS display: none; dari sini */
+}
+
+/* Gunakan opacity & pointer-events untuk hide/show */
+@media (max-width: 1279px) {
+    .toc {
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+    }
+}
+
+@media (min-width: 1280px) {
+    .toc {
+        opacity: 1;
+        pointer-events: all;
+        position: sticky;
+    }
+}
+
+        .toc-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .toc-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .toc-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .toc-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            background: none;
+            text-align: left;
+            width: 100%;
+        }
+
+        .toc-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-primary);
+        }
+
+        .toc-item.active {
+            background: rgba(239, 68, 68, 0.05);
+            color: var(--accent);
+            border-left: 2px solid var(--accent);
+        }
+
+        .toc-progress {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+      .progress-header {
+    display: flex;
+    justify-content: space-between; /* ✅ BENAR */
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+        .progress-bar {
+            width: 100%;
+            height: 0.375rem;
+            background: var(--bg-primary);
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            border-radius: 9999px;
+        }
+
+        /* Mobile Drawer */
+        .mobile-drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-drawer {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 20rem;
+            background: var(--bg-secondary);
+            z-index: 51;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .mobile-drawer.open {
+            transform: translateX(0);
+        }
+
+        .drawer-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .drawer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .drawer-close {
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .drawer-close:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .drawer-search {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .drawer-content {
+            padding: 1.5rem;
+        }
+
+        .drawer-nav-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        .content-footer {
+            border-top: 1px solid var(--border);
+            padding: 1.5rem;
+            background: var(--bg-primary);
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(1rem); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .content-header {
+                padding: 1rem;
+            }
+            
+            .content-body {
+                padding: 1rem;
+            }
+            
+            .content-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Header -->
+<header class="header">
+  <div class="header-container">
+    <div class="header-content">
+      
+      <!-- Logo -->
+      <div class="logo-section">
+        <a href="#" class="logo">
+          <div class="logo-icon">
+            <div class="logo-square"></div>
+          </div>
+          <div class="logo-text">
+            <h1>Tempat Belajar</h1>
+            <p>Konfigurasi DNS (Bind9), Web (Apache2), dan Wordpress</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Navigation Menu (pindah keluar dari logo-section) -->
+      <nav class="nav-menu">
+        <div class="dropdown">
+          <button class="dropdown-trigger">Documentation</button>
+          <div class="dropdown-menu">
+            <a href="DNS.pdf" target="_blank" class="dropdown-item">
+              <div class="dropdown-item-content">
+                <h3>DNS Tutorial</h3>
+                <p>PDF File</p>
+              </div>
+            </a>
+            <a href="web.pdf" download class="dropdown-item">
+              <div class="dropdown-item-content">
+                <h3>Webserver Tutorial</h3>
+                <p>PDF File</p>
+              </div>
+            </a>
+            <a href="wordpress.pdf" target="_blank" class="dropdown-item">
+              <div class="dropdown-item-content">
+                <h3>Wordpress Tutorial</h3>
+                <p>PDF File</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="dropdown">
+          <button class="dropdown-trigger">Back</button>
+          <div class="dropdown-menu">
+            <a href="index.php" class="dropdown-item">
+              <div class="dropdown-item-content">
+                <h3>Dashboard</h3>
+                <p>Ke dashboard</p>
+              </div>
+            </a>
+            <a href="cv.html" class="dropdown-item">
+              <div class="dropdown-item-content">
+                <h3>Profil</h3>
+                <p>Ke profil</p>
+              </div>
+            </a>
+           
+          </div>
+        </div>
+
+    
+        <div>    <!-- Theme Toggle -->
+                    <button class="theme-toggle" id="themeToggle">
+                        <i data-lucide="sun" id="themeIcon"></i>
+                    </button>
+
+                    <!-- Mobile Menu -->
+                    <button class="mobile-menu-btn" id="mobileMenuBtn">
+                        <i data-lucide="menu"></i>
+                    </button></div>
+      </nav>
+
+    </div>
+  </div>
+  
+</header>
+
+               
+
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-card">
+                    <div class="sidebar-header">
+                        <i data-lucide="file-text"></i>
+                        <h3 class="sidebar-title">Contents</h3>
+                    </div>
+
+                    <div class="nav-items">
+                        <button class="nav-item active" data-section="dns">
+                            <div class="nav-item-content">
+                                <div class="nav-item-icon">
+                                    <i data-lucide="server"></i>
+                                </div>
+                                <div class="nav-item-text">
+                                    <h3>Konfigurasi DNS</h3>
+                                    <p>Instalasi & konfigurasi BIND9</p>
+                                </div>
+                                <div class="nav-item-badge">Doc</div>
+                            </div>
+                        </button>
+
+                        <button class="nav-item" data-section="web">
+                            <div class="nav-item-content">
+                                <div class="nav-item-icon">
+                                    <i data-lucide="globe"></i>
+                                </div>
+                                <div class="nav-item-text">
+                                    <h3>Konfigurasi Web</h3>
+                                    <p>Instalasi & konfigurasi Apache2</p>
+                                </div>
+                                <div class="nav-item-badge">Doc</div>
+                            </div>
+                        </button>
+                        
+                          <button class="nav-item" data-section="wordpress">
+  <div class="nav-item-content">
+    <div class="nav-item-icon">
+      <img src="wordpress-logo.svg" alt="WordPress" width="24" height="24">
+    </div>
+    <div class="nav-item-text">
+      <h3>Konfigurasi Wordpress</h3>
+      <p>Instalasi & kustomisasi</p>
+    </div>
+    <div class="nav-item-badge">Doc</div>
+  </div>
+</button>
+
+                    </div>
+
+                    <!-- Quick Tips -->
+                    <div class="quick-tips">
+                        <div class="quick-tips-header">
+                            <i data-lucide="zap"></i>
+                            <h4 class="quick-tips-title">Quick Tips</h4>
+                        </div>
+                        <ul class="tips-list">
+                            <li class="tip-item">
+                                <div class="tip-dot"></div>
+                                <span>Backup file sebelum edit (<span class="tip-code">/etc/bind/*</span>, <span class="tip-code">/etc/apache2/*</span>).</span>
+                            </li>
+                            <li class="tip-item">
+                                <div class="tip-dot"></div>
+                                <span>Inkrementasi serial di SOA setiap change.</span>
+                            </li>
+                            <li class="tip-item">
+                                <div class="tip-dot"></div>
+                                <span>Periksa firewall (port 53 & 80/443).</span>
+                            </li>
+                            <li class="tip-item">
+                                <div class="tip-dot"></div>
+                                <span>Gunakan <span class="tip-code">named-checkzone</span> sebelum restart BIND.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                        <p style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.5;">
+                            Materi dibuat berdasarkan pengalaman, bisa saja terjadi error saat konfigurasi
+                        </p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                
+                <!-- Main Content -->
+                <main class="main-content">
+                    <!-- Content Header -->
+                    <div class="content-header">
+  <h1 class="content-title"
+      x-text="active === 'dns' ? 'Konfigurasi DNS (BIND9)' 
+            : active === 'web' ? 'Konfigurasi Web (Apache2)' 
+            : 'Konfigurasi WordPress'"></h1>
+
+
+
+
+                    <!-- Content Body -->
+                    <div class="content-body">
+                        <!-- DNS Content -->
+                        <div class="content-section active" id="dnsContent">
+                            <div class="section-intro">
+                                <h3>Instalasi & Konfigurasi BIND9 (DNS Server)</h3>
+                                <p>Panduan lengkap — from preparing netplan to setting up forward & reverse zones, checks and troubleshooting.</p>
+                            </div>
+
+                            <h3 id="persiapan">Persiapan</h3>
+                            <ul>
+                                <li>OS: Ubuntu/Debian (tested on Ubuntu 22.04)</li>
+                                <li>Akses root / sudo</li>
+                                <li>VM: prepare bridged and host-only if needed</li>
+                            </ul>
+
+                            <h3 id="update-install">Update & install</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">System Update</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo apt update
+sudo apt upgrade -y
+sudo apt install vim curl net-tools -y</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="disable-cloud-init">Disable cloud-init (if using cloud images)</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Cloud-init Configuration</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo nano /etc/cloud/cloud.cfg.d/99-installer.cfg
+# add:
+network: {config: disabled}
+# save and reboot if needed</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="netplan-static">Netplan static IP example</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Netplan Configuration</span>
+                                        <span class="code-lang">YAML</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo tee /etc/netplan/01-netcfg.yaml > /dev/null <<EOF
+network:
+  version: 2
+  ethernets:
+    ens33:
+      dhcp4: no
+      addresses: [10.10.5.1/24]
+      gateway4: 10.10.5.254
+      nameservers:
+        addresses: [8.8.8.8,8.8.4.4]
+EOF
+
+sudo chmod 600 /etc/netplan/01-netcfg.yaml
+sudo netplan apply</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="install-bind9">Install Bind9</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">BIND9 Installation</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo apt install bind9 bind9utils bind9-doc -y
+sudo systemctl enable --now bind9
+sudo systemctl status bind9</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="named-conf-options">named.conf.options (forwarders)</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">/etc/bind/named.conf.options</span>
+                                        <span class="code-lang">INI</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>options {
+  directory "/var/cache/bind";
+  recursion yes;
+  allow-query { any; };
+
+  forwarders {
+    8.8.8.8;
+    8.8.4.4;
+  };
+
+  dnssec-validation auto;
+  auth-nxdomain no;
+  listen-on { 127.0.0.1; 10.10.5.1; };
+};</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="create-zone-files">Create zone files</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Zone File Creation</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>cd /etc/bind
+sudo cp db.local db.kelompok5
+sudo cp db.127 db.10</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="register-zones">Register zones in named.conf.local</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">/etc/bind/named.conf.local</span>
+                                        <span class="code-lang">INI</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>zone "kelompok5.sch.id" {
+  type master;
+  file "/etc/bind/db.kelompok5";
+};
+
+zone "10.10.5.in-addr.arpa" {
+  type master;
+  file "/etc/bind/db.10";
+};</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="db-kelompok5">db.kelompok5 example</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">/etc/bind/db.kelompok5</span>
+                                        <span class="code-lang">DNS</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>$TTL 604800
+@   IN  SOA ns1.kelompok5.sch.id. admin.kelompok5.sch.id. (
+        2024080101 ; serial
+        604800
+        86400
+        2419200
+        604800 )
+@       IN  NS  ns1.kelompok5.sch.id.
+ns1     IN  A   10.10.5.1
+www     IN  A   10.10.5.11
+@       IN  A   10.10.5.11</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="db-10">db.10 example (reverse)</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">/etc/bind/db.10</span>
+                                        <span class="code-lang">DNS</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>$TTL 604800
+@   IN  SOA ns1.kelompok5.sch.id. admin.kelompok5.sch.id. (
+        2024080101 ; serial
+        604800
+        86400
+        2419200
+        604800 )
+@       IN  NS      ns1.kelompok5.sch.id.
+1       IN  PTR     ns1.kelompok5.sch.id.
+11      IN  PTR     www.kelompok5.sch.id.</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="validation-restart">Validation & restart</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">BIND9 Validation</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo named-checkconf
+sudo named-checkzone kelompok5.sch.id /etc/bind/db.kelompok5
+sudo named-checkzone 10.10.5.in-addr.arpa /etc/bind/db.10
+sudo systemctl restart bind9
+sudo systemctl status bind9</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="testing">Testing</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">DNS Testing Commands</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>nslookup www.kelompok5.sch.id 10.10.5.1
+dig @10.10.5.1 www.kelompok5.sch.id
+nslookup 10.10.5.11 10.10.5.1
+dig -x 10.10.5.11 @10.10.5.1</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="troubleshooting">Troubleshooting tips</h3>
+                            <div class="info-box amber">
+                                <ul>
+                                    <li>Periksa named-checkzone output untuk error pada SOA/serial.</li>
+                                    <li>Pastikan permissions file zona dan ownership benar (root:bind).</li>
+                                    <li>Jika menggunakan firewall, buka port 53 tcp/udp.</li>
+                                </ul>
+                            </div>
+
+                            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);">
+
+                            <h3 id="appendix">Appendix: commonly used configs</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Complete named.conf.options</span>
+                                        <span class="code-lang">INI</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>// /etc/bind/named.conf.options
+options {
+  directory "/var/cache/bind";
+  recursion yes;
+  allow-query { any; };
+
+  forwarders { 8.8.8.8; 8.8.4.4; };
+  dnssec-validation auto;
+  auth-nxdomain no;
+  listen-on { 127.0.0.1; 10.10.5.1; };
+};</pre>
+                                </div>
+                            </div>
+
+                            <div class="info-box green">
+                                <p style="font-weight: 500; margin: 0;">
+                                    ✅ Selesai bagian DNS — lanjut ke bagian Web untuk membuat virtual host dan integrasi A record.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Web Content -->
+                        <div class="content-section" id="webContent">
+                            <div class="section-intro">
+                                <h3>Instalasi & Konfigurasi Web Server (Apache2)</h3>
+                                <p>Panduan membuat web server sederhana menggunakan Apache2, virtual host, rewrite, SSL (Let's Encrypt), dan langkah testing.</p>
+                            </div>
+
+                            <h3 id="web-prerequisites">Prerequisites</h3>
+                            <ul>
+                                <li>OS: Ubuntu/Debian (tested on Ubuntu 22.04)</li>
+                                <li>Root/sudo access</li>
+                                <li>DNS server already configured (from DNS section)</li>
+                                <li>Domain pointing to your server IP</li>
+                            </ul>
+
+                            <h3 id="install-apache">Install Apache</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Apache2 Installation</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo apt update
+sudo apt install apache2 -y
+sudo systemctl enable --now apache2
+sudo systemctl status apache2</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="firewall-configuration">Firewall Configuration</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">UFW Firewall Setup</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo ufw app list
+sudo ufw allow 'Apache Full'
+sudo ufw allow 'OpenSSH'
+sudo ufw enable
+sudo ufw status</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="create-site-directory">Create site directory & sample page</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Site Directory Setup</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo mkdir -p /var/www/kelompok5.sch.id/public
+sudo chown -R $USER:$USER /var/www/kelompok5.sch.id
+sudo chmod -R 755 /var/www/kelompok5.sch.id
+
+# Create sample HTML page
+sudo tee /var/www/kelompok5.sch.id/public/index.html > /dev/null <<EOF
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelompok 5 - DNS & Web Server</title>
+</head>
+<body>
+    <h1>Selamat Datang di Kelompok5.sch.id</h1>
+    <p>Web server berhasil dikonfigurasi!</p>
+</body>
+</html>
+EOF</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="virtualhost-config">VirtualHost Configuration</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">/etc/apache2/sites-available/kelompok5.sch.id.conf</span>
+                                        <span class="code-lang">APACHE</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>sudo tee /etc/apache2/sites-available/kelompok5.sch.id.conf > /dev/null <<EOF
+<VirtualHost *:80>
+    ServerName kelompok5.sch.id
+    ServerAlias www.kelompok5.sch.id
+    DocumentRoot /var/www/kelompok5.sch.id/public
+    
+    # Directory configuration
+    <Directory /var/www/kelompok5.sch.id/public>
+        Options Indexes FollowSymLinks MultiViews
+        AllowOverride All
+        Require all granted
+    </Directory>
+    
+    # Security headers
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Logging
+    ErrorLog \${APACHE_LOG_DIR}/kelompok5_error.log
+    CustomLog \${APACHE_LOG_DIR}/kelompok5_access.log combined
+    LogLevel warn
+</VirtualHost>
+EOF</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="enable-site-modules">Enable Site & Required Modules</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Enable Apache Site & Modules</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre># Enable required modules
+sudo a2enmod rewrite
+sudo a2enmod headers
+sudo a2enmod ssl
+
+# Enable site and disable default
+sudo a2ensite kelompok5.sch.id.conf
+sudo a2dissite 000-default.conf
+
+# Test configuration and reload
+sudo apache2ctl configtest
+sudo systemctl reload apache2</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="htaccess-configuration">.htaccess Configuration</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">/var/www/kelompok5.sch.id/public/.htaccess</span>
+                                        <span class="code-lang">APACHE</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre># Enable rewrite engine
+RewriteEngine On
+
+# Force HTTPS (when SSL is configured)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Pretty URLs
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?/$1 [QSA,L]
+
+# Security: Deny access to sensitive files
+<Files ~ "^\.">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Prevent access to backup files
+<FilesMatch "\.(bak|backup|old|tmp)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch></pre>
+                                </div>
+                            </div>
+
+                            <h3 id="permissions-security">Permissions & Security</h3>
+                            <div class="info-box blue">
+                                <h4>File Permissions</h4>
+                                <ul>
+                                    <li>Set owner: <code>sudo chown -R www-data:www-data /var/www/kelompok5.sch.id</code></li>
+                                    <li>Set dir perms: <code>find /var/www/kelompok5.sch.id -type d -exec chmod 755 {} \;</code></li>
+                                    <li>Set file perms: <code>find /var/www/kelompok5.sch.id -type f -exec chmod 644 {} \;</code></li>
+                                    <li>Secure .htaccess: <code>chmod 644 /var/www/kelompok5.sch.id/public/.htaccess</code></li>
+                                </ul>
+                            </div>
+
+                            <h3 id="testing-hosts">Testing & Host Configuration</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Client hosts file configuration</span>
+                                        <span class="code-lang">INI</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre># Windows: C:\Windows\System32\drivers\etc\hosts
+# Linux/Mac: /etc/hosts
+# Add these lines (replace with your server IP):
+10.10.5.11   kelompok5.sch.id
+10.10.5.11   www.kelompok5.sch.id
+
+# Test with curl
+curl -I http://kelompok5.sch.id
+curl http://www.kelompok5.sch.id</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="ssl-https-setup">SSL/HTTPS Setup with Let's Encrypt</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Certbot SSL Installation</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre># Install Certbot
+sudo apt install certbot python3-certbot-apache -y
+
+# Obtain SSL certificate (requires valid domain)
+sudo certbot --apache -d kelompok5.sch.id -d www.kelompok5.sch.id
+
+# Test auto-renewal
+sudo certbot renew --dry-run
+
+# Check certificate status
+sudo certbot certificates</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="virtual-host-ssl">HTTPS VirtualHost (Auto-generated by Certbot)</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">SSL VirtualHost Configuration</span>
+                                        <span class="code-lang">APACHE</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre><VirtualHost *:443>
+    ServerName kelompok5.sch.id
+    ServerAlias www.kelompok5.sch.id
+    DocumentRoot /var/www/kelompok5.sch.id/public
+    
+    # SSL Configuration
+    SSLEngine on
+    SSLCertificateFile /etc/letsencrypt/live/kelompok5.sch.id/fullchain.pem
+    SSLCertificateKeyFile /etc/letsencrypt/live/kelompok5.sch.id/privkey.pem
+    Include /etc/letsencrypt/options-ssl-apache.conf
+    
+    # Security Headers
+   
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+</VirtualHost></pre>
+                                </div>
+                            </div>
+
+                            <h3 id="monitoring-logs">Monitoring & Log Analysis</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Apache Log Commands</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre># Real-time error monitoring
+sudo tail -f /var/log/apache2/kelompok5_error.log
+
+# Access log analysis
+sudo tail -f /var/log/apache2/kelompok5_access.log
+
+# Check Apache status
+sudo systemctl status apache2
+sudo apache2ctl -S
+
+# Test configuration
+sudo apache2ctl configtest</pre>
+                                </div>
+                            </div>
+
+                            <h3 id="performance-optimization">Performance Optimization</h3>
+                            <div class="info-box purple">
+                                <h4>Optimization Tips</h4>
+                                <ul>
+                                    <li>Enable compression: <code>sudo a2enmod deflate</code></li>
+                                    <li>Enable caching: <code>sudo a2enmod expires</code></li>
+                                    <li>Configure keepalive in <code>/etc/apache2/apache2.conf</code></li>
+                                    <li>Monitor with: <code>apache2ctl status</code></li>
+                                </ul>
+                            </div>
+
+                            <h3 id="troubleshooting-web">Troubleshooting Common Issues</h3>
+                            <div class="info-box amber">
+                                <ul>
+                                    <li>403 Forbidden: Check directory permissions and ownership</li>
+                                    <li>500 Internal Error: Check <code>/var/log/apache2/error.log</code></li>
+                                    <li>Site not loading: Verify DNS resolution and VirtualHost config</li>
+                                    <li>SSL issues: Check certificate validity with <code>sudo certbot certificates</code></li>
+                                    <li>Port conflicts: Check with <code>sudo netstat -tlnp | grep :80</code></li>
+                                </ul>
+                            </div>
+
+                            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--border);">
+
+                            <h3 id="appendix-web">Appendix: Complete Setup Script</h3>
+                            <div class="code-block">
+                                <div class="code-header">
+                                    <div class="code-info">
+                                        <i data-lucide="terminal"></i>
+                                        <span class="code-title">Automated Apache Setup Script</span>
+                                        <span class="code-lang">BASH</span>
+                                    </div>
+                                    <button class="copy-btn" onclick="copyCode(this)">
+                                        <i data-lucide="copy"></i>
+                                        <span>Copy</span>
+                                    </button>
+                                </div>
+                                <div class="code-content">
+                                    <pre>#!/bin/bash
+# Complete Apache2 setup script for kelompok5.sch.id
+
+echo "🚀 Starting Apache2 setup for kelompok5.sch.id..."
+
+# Update system
+sudo apt update && sudo apt upgrade -y
+sudo apt install apache2 certbot python3-certbot-apache -y
+
+# Enable modules
+sudo a2enmod rewrite headers ssl deflate expires
+
+# Create directory structure
+sudo mkdir -p /var/www/kelompok5.sch.id/public
+sudo chown -R www-data:www-data /var/www/kelompok5.sch.id
+sudo chmod -R 755 /var/www/kelompok5.sch.id
+
+# Setup complete - check status
+sudo systemctl status apache2
+echo "✅ Apache2 setup completed!"
+echo "Next: Configure your VirtualHost and DNS integration"</pre>
+                                </div>
+                            </div>
+
+                            <div class="info-box green">
+                                <p style="font-weight: 500; margin: 0;">
+                                    ✅ Selesai bagian Web — integrasikan A record pada DNS agar domain resolve ke web server dengan SSL yang aman.
+                                </p>
+                            </div>
+                        </div>
+                                            <div class="content-section" id="wordpressContent">
+    <div class="section-intro">
+        <h3>Instalasi & Konfigurasi WordPress (Ubuntu 22 + Apache2 + MySQL)</h3>
+        <p>Panduan lengkap setup WordPress di web server Ubuntu 22.04 menggunakan Apache2, MySQL/MariaDB, PHP, konfigurasi VirtualHost, dan pengaturan template.</p>
+    </div>
+
+    <h3 id="wp-prerequisites">Prerequisites</h3>
+    <ul>
+        <li>OS: Ubuntu 22.04 (server/VM)</li>
+        <li>Apache2 sudah terinstal & jalan (lihat materi Web Server)</li>
+        <li>MySQL/MariaDB server</li>
+        <li>PHP 8.x + ekstensi</li>
+        <li>Domain sudah diarahkan ke server</li>
+    </ul>
+
+    <h3 id="install-lamp">Install LAMP Stack (Apache, MySQL, PHP)</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <div class="code-info">
+                <i data-lucide="terminal"></i>
+                <span class="code-title">LAMP Installation</span>
+                <span class="code-lang">BASH</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">
+                <i data-lucide="copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div class="code-content">
+            <pre>sudo apt update && sudo apt upgrade -y
+sudo apt install apache2 mysql-server -y
+sudo apt install php libapache2-mod-php php-mysql php-cli php-curl php-xml php-mbstring unzip -y
+
+# Check PHP version
+php -v</pre>
+        </div>
+    </div>
+
+    <h3 id="mysql-database">Setup MySQL Database</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <div class="code-info">
+                <i data-lucide="terminal"></i>
+                <span class="code-title">MySQL Database for WordPress</span>
+                <span class="code-lang">SQL</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">
+                <i data-lucide="copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div class="code-content">
+            <pre>sudo mysql -u root
+
+-- Buat database dan user WordPress
+CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'passwordku';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;</pre>
+        </div>
+    </div>
+
+    <h3 id="download-wordpress">Download & Extract WordPress</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <div class="code-info">
+                <i data-lucide="terminal"></i>
+                <span class="code-title">WordPress Download</span>
+                <span class="code-lang">BASH</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">
+                <i data-lucide="copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div class="code-content">
+            <pre>cd /tmp
+wget https://wordpress.org/latest.zip
+unzip latest.zip
+
+# Pindah ke folder web
+sudo mkdir -p /var/www/kelompok5.sch.id/public
+sudo cp -R wordpress/* /var/www/kelompok5.sch.id/public
+
+# Set ownership & permission
+sudo chown -R www-data:www-data /var/www/kelompok5.sch.id
+sudo find /var/www/kelompok5.sch.id -type d -exec chmod 755 {} \;
+sudo find /var/www/kelompok5.sch.id -type f -exec chmod 644 {} \;</pre>
+        </div>
+    </div>
+
+    <h3 id="wp-config">Konfigurasi WordPress</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <div class="code-info">
+                <i data-lucide="terminal"></i>
+                <span class="code-title">wp-config.php setup</span>
+                <span class="code-lang">PHP</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">
+                <i data-lucide="copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div class="code-content">
+            <pre>cd /var/www/kelompok5.sch.id/public
+cp wp-config-sample.php wp-config.php
+
+# Edit file
+sudo nano wp-config.php
+
+# Ubah bagian DB sesuai database tadi:
+define( 'DB_NAME', 'wordpress' );
+define( 'DB_USER', 'wpuser' );
+define( 'DB_PASSWORD', 'passwordku' );
+define( 'DB_HOST', 'localhost' );</pre>
+        </div>
+    </div>
+
+    <h3 id="virtualhost-wordpress">VirtualHost Apache untuk WordPress</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <div class="code-info">
+                <i data-lucide="terminal"></i>
+                <span class="code-title">/etc/apache2/sites-available/kelompok5.sch.id.conf</span>
+                <span class="code-lang">APACHE</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">
+                <i data-lucide="copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div class="code-content">
+            <pre>&lt;VirtualHost *:80&gt;
+    ServerName kelompok5.sch.id
+    ServerAlias www.kelompok5.sch.id
+    DocumentRoot /var/www/kelompok5.sch.id/public
+
+    &lt;Directory /var/www/kelompok5.sch.id/public&gt;
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+
+    ErrorLog ${APACHE_LOG_DIR}/wp_error.log
+    CustomLog ${APACHE_LOG_DIR}/wp_access.log combined
+&lt;/VirtualHost&gt;</pre>
+        </div>
+    </div>
+
+    <h3 id="enable-site">Aktifkan Site & Restart Apache</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <div class="code-info">
+                <i data-lucide="terminal"></i>
+                <span class="code-title">Enable & Restart Apache</span>
+                <span class="code-lang">BASH</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">
+                <i data-lucide="copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div class="code-content">
+            <pre>sudo a2enmod rewrite
+sudo a2ensite kelompok5.sch.id.conf
+sudo a2dissite 000-default.conf
+sudo apache2ctl configtest
+sudo systemctl reload apache2</pre>
+        </div>
+    </div>
+
+    <h3 id="ssl-setup">SSL/HTTPS Setup (Let's Encrypt)</h3>
+    <div class="code-block">
+        <div class="code-header">
+            <div class="code-info">
+                <i data-lucide="terminal"></i>
+                <span class="code-title">Certbot SSL</span>
+                <span class="code-lang">BASH</span>
+            </div>
+            <button class="copy-btn" onclick="copyCode(this)">
+                <i data-lucide="copy"></i>
+                <span>Copy</span>
+            </button>
+        </div>
+        <div class="code-content">
+            <pre>sudo apt install certbot python3-certbot-apache -y
+sudo certbot --apache -d kelompok5.sch.id -d www.kelompok5.sch.id
+sudo certbot renew --dry-run</pre>
+        </div>
+    </div>
+
+    <h3 id="final-setup">Final Step: Install via Browser</h3>
+    <div class="info-box green">
+        <p>Akses <code>http://kelompok5.sch.id</code> di browser → ikuti wizard instalasi WordPress (pilih bahasa, masukkan nama site, username admin, password, dsb).</p>
+    </div>
+
+    <h3 id="edit-theme">Mengatur Tema & Template</h3>
+    <div class="info-box purple">
+        <ul>
+            <li>Masuk dashboard: <code>http://kelompok5.sch.id/wp-admin</code></li>
+            <li>Login pakai akun admin</li>
+            <li>Buka menu <b>Appearance → Themes</b></li>
+            <li>Bisa install theme baru, aktifkan, lalu edit via <b>Customizer</b></li>
+            <li>Untuk oprek manual: edit file di <code>/var/www/kelompok5.sch.id/public/wp-content/themes/</code></li>
+        </ul>
+    </div>
+
+    <h3 id="troubleshoot-wp">Troubleshooting</h3>
+    <div class="info-box amber">
+        <ul>
+            <li>403 Forbidden → cek permission folder</li>
+            <li>Error establishing DB connection → cek wp-config.php</li>
+            <li>500 Internal Error → cek <code>/var/log/apache2/wp_error.log</code></li>
+            <li>SSL not working → cek dengan <code>sudo certbot certificates</code></li>
+        </ul>
+    </div>
+
+    <div class="info-box blue">
+        <p>✅ WordPress siap dipakai, tinggal otak-atik template dan plugin sesuai kebutuhan 🎉</p>
+    </div>
+</div>
+
+                    </div>
+
+
+                    <!-- Footer -->
+                    <div class="content-footer">
+                        
+                    </div>
+                </main>
+
+                <!-- Table of Contents -->
+                <aside class="toc">
+                    <div class="toc-card">
+                        <div class="toc-header">
+                            <i data-lucide="list"></i>
+                            <h3 class="toc-title">On This Page</h3>
+                        </div>
+
+                        <nav class="toc-nav" id="tocNav">
+                            <!-- TOC items will be dynamically populated by JavaScript -->
+                        </nav>
+
+                        <div class="toc-progress">
+                            <div class="progress-header">
+                                <span>Reading Progress</span>
+                                <span id="progressPercent">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-drawer-overlay" id="mobileDrawerOverlay">
+        <div class="mobile-drawer" id="mobileDrawer">
+            <div class="drawer-header">
+                <div class="drawer-logo">
+                    <div class="logo-icon">
+                        <div class="logo-square"></div>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: var(--text-primary);">Laravel Docs</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">DNS & Web Config</div>
+                    </div>
+                </div>
+                <button class="drawer-close" id="drawerClose">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <div class="drawer-search">
+                <div class="search-container">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="search" class="search-input" placeholder="Search docs...">
+                </div>
+            </div>
+
+            <div class="drawer-content">
+                <h3 class="drawer-nav-title">Contents</h3>
+                <div class="nav-items">
+                    <button class="nav-item active" data-section="dns">
+                        <div class="nav-item-content">
+                            <div class="nav-item-icon">
+                                <i data-lucide="server"></i>
+                            </div>
+                            <div class="nav-item-text">
+                                <h3>Konfigurasi DNS</h3>
+                                <p>Instalasi & konfigurasi BIND9</p>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button class="nav-item" data-section="web">
+                        <div class="nav-item-content">
+                            <div class="nav-item-icon">
+                                <i data-lucide="globe"></i>
+                            </div>
+                            <div class="nav-item-text">
+                                <h3>Konfigurasi Web</h3>
+                                <p>Instalasi & konfigurasi Apache2</p>
+                            </div>
+                        </div>
+                    </button>
+                       <button class="nav-item" data-section="wordpressContent">
+                        <div class="nav-item-content">
+                            <div class="nav-item-icon">
+                                <i data-lucide="globe"></i>
+                            </div>
+                            <div class="nav-item-text">
+                                <h3>Konfigurasi WordPress</h3>
+                                <p>Instalasi & konfigurasi Wordpress</p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // App State
+    let currentSection = 'dns';
+    let currentTheme = localStorage.getItem('theme') || 'light';
+    let searchQuery = '';
+    let hoverTimeout = null;
+    let observer = null; // Untuk Intersection Observer
+
+    // TOC Data
+    const tocData = {
+        dns: [
+            { id: 'persiapan', title: 'Persiapan' },
+            { id: 'update-install', title: 'Update & Install' },
+            { id: 'disable-cloud-init', title: 'Disable Cloud-init' },
+            { id: 'netplan-static', title: 'Netplan Static IP' },
+            { id: 'install-bind9', title: 'Install Bind9' },
+            { id: 'named-conf-options', title: 'named.conf.options' },
+            { id: 'create-zone-files', title: 'Create Zone Files' },
+            { id: 'register-zones', title: 'Register Zones' },
+            { id: 'db-kelompok5', title: 'db.kelompok5' },
+            { id: 'db-10', title: 'db.10 (reverse)' },
+            { id: 'validation-restart', title: 'Validation & Restart' },
+            { id: 'testing', title: 'Testing' },
+            { id: 'troubleshooting', title: 'Troubleshooting' },
+            { id: 'appendix', title: 'Appendix' }
+        ],
+        web: [
+            { id: 'web-prerequisites', title: 'Prerequisites' },
+            { id: 'install-apache', title: 'Install Apache' },
+            { id: 'firewall-configuration', title: 'Firewall Configuration' },
+            { id: 'create-site-directory', title: 'Create Site Directory' },
+            { id: 'virtualhost-config', title: 'VirtualHost Config' },
+            { id: 'enable-site-modules', title: 'Enable Site & Modules' },
+            { id: 'htaccess-configuration', title: '.htaccess Configuration' },
+            { id: 'permissions-security', title: 'Permissions & Security' },
+            { id: 'testing-hosts', title: 'Testing & Hosts' },
+            { id: 'ssl-https-setup', title: 'SSL/HTTPS Setup' },
+            { id: 'virtual-host-ssl', title: 'HTTPS VirtualHost' },
+            { id: 'monitoring-logs', title: 'Monitoring & Logs' },
+            { id: 'performance-optimization', title: 'Performance Optimization' },
+            { id: 'troubleshooting-web', title: 'Troubleshooting' },
+            { id: 'appendix-web', title: 'Appendix' }
+        ]
+    };
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeTheme();
+        initializeEventListeners();
+        initializeTOC();
+        initializeScrollObserver(); // Inisialisasi observer untuk mendeteksi section yang aktif
+        updateProgressTracking();
+        lucide.createIcons();
+    });
+
+    // Theme Management
+    function initializeTheme() {
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        updateThemeIcon();
+    }
+
+    function toggleTheme() {
+        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        localStorage.setItem('theme', currentTheme);
+        updateThemeIcon();
+    }
+
+    function updateThemeIcon() {
+        const themeIcon = document.getElementById('themeIcon');
+        if (themeIcon) {
+            themeIcon.setAttribute('data-lucide', currentTheme === 'light' ? 'moon' : 'sun');
+            lucide.createIcons();
+        }
+    }
+
+    // Event Listeners
+    function initializeEventListeners() {
+        // Theme toggle
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        // Mobile menu
+        document.getElementById('mobileMenuBtn').addEventListener('click', openMobileDrawer);
+        document.getElementById('drawerClose').addEventListener('click', closeMobileDrawer);
+        document.getElementById('mobileDrawerOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeMobileDrawer();
+            }
+        });
+
+        // Navigation items (both sidebar and mobile)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            // Hover navigation (desktop only)
+            item.addEventListener('mouseenter', function() {
+                if (window.innerWidth >= 1024) {
+                    if (hoverTimeout) clearTimeout(hoverTimeout);
+                    hoverTimeout = setTimeout(() => {
+                        const section = this.getAttribute('data-section');
+                        if (section && section !== currentSection) {
+                            switchSection(section);
+                        }
+                    }, 150);
+                }
+            });
+
+            item.addEventListener('mouseleave', function() {
+                if (hoverTimeout) {
+                    clearTimeout(hoverTimeout);
+                    hoverTimeout = null;
+                }
+            });
+
+            // Click navigation
+            item.addEventListener('click', function() {
+                const section = this.getAttribute('data-section');
+                if (section) {
+                    switchSection(section);
+                    closeMobileDrawer();
+                }
+            });
+        });
+        
+
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                searchQuery = e.target.value;
+                // Add search logic here if needed
+            });
+        }
+
+        // Scroll tracking
+        window.addEventListener('scroll', updateProgressTracking);
+        window.addEventListener('scroll', highlightActiveTOCItem); // Tambah event listener untuk highlight TOC
+    }
+
+    // Section Management
+    function switchSection(section) {
+        if (section === currentSection) return;
+
+        currentSection = section;
+
+        // Update nav items
+        document.querySelectorAll('.nav-item').forEach(item => {
+            if (item.getAttribute('data-section') === section) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        // Update content
+        document.querySelectorAll('.content-section').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        const targetContent = document.getElementById(section + 'Content');
+        if (targetContent) {
+            targetContent.classList.add('active');
+        }
+
+        // Update header
+        const titles = {
+            dns: 'Konfigurasi DNS (BIND9)',
+            web: 'Konfigurasi Web (Apache2)',
+            wp: 'Konfigurasi Wordpress'
+        };
+        
+        const subtitles = {
+            dns: 'Instalasi, konfigurasi zona forward/reverse, testing',
+            web: 'Instalasi, virtualhost, mod_rewrite, testing',
+            wp: 'Instalasi, kustomisasi, dan optimasi'
+        };
+
+        document.getElementById('contentTitle').textContent = titles[section] || titles.dns;
+        document.getElementById('contentSubtitle').textContent = subtitles[section] || subtitles.dns;
+
+        // Update TOC
+        initializeTOC();
+        
+        // Reset scroll and update progress
+        window.scrollTo(0, 0);
+        updateProgressTracking();
+        
+        // Re-initialize observer setelah ganti section
+        setTimeout(() => {
+            initializeScrollObserver();
+            highlightActiveTOCItem(); // Panggil fungsi highlight setelah section berganti
+        }, 100);
+    }
+
+    // TOC Management
+    function initializeTOC() {
+        const tocNav = document.getElementById('tocNav');
+        if (!tocNav) return;
+
+        const items = tocData[currentSection] || [];
+        
+        tocNav.innerHTML = items.map(item => `
+            <button class="toc-item" data-id="${item.id}" onclick="scrollToSection('${item.id}')">
+                <i data-lucide="chevron-right" style="width: 0.75rem; height: 0.75rem;"></i>
+                <span>${item.title}</span>
+            </button>
+        `).join('');
+
+        lucide.createIcons();
+    }
+
+    function scrollToSection(sectionId) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            // Hitung offset untuk header yang sticky
+            const headerHeight = document.querySelector('.header').offsetHeight;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Progress Tracking
+    function updateProgressTracking() {
+        const activeSection = document.querySelector('.content-section.active');
+        if (!activeSection) return;
+
+        const scrollTop = window.scrollY;
+        const sectionTop = activeSection.offsetTop;
+        const sectionHeight = activeSection.scrollHeight;
+        const windowHeight = window.innerHeight;
+
+        // Hitung persentase progress
+        const progress = Math.min(
+            100,
+            Math.max(0, ((scrollTop - sectionTop) / (sectionHeight - windowHeight)) * 100)
+        );
+
+        // Update UI
+        const progressFill = document.getElementById('progressFill');
+        const progressPercent = document.getElementById('progressPercent');
+        
+        if (progressFill) progressFill.style.width = progress + "%";
+        if (progressPercent) progressPercent.textContent = Math.round(progress) + "%";
+    }
+
+    // Fungsi untuk meng-highlight TOC item yang aktif
+    function highlightActiveTOCItem() {
+        const sections = document.querySelectorAll('.content-section.active h3[id]');
+        const tocItems = document.querySelectorAll('.toc-item');
+        
+        // Cari section yang paling terlihat di viewport
+        let closestSection = null;
+        let closestDistance = Infinity;
+        
+        sections.forEach(section => {
+            const rect = section.getBoundingClientRect();
+            const distance = Math.abs(rect.top);
+            
+            if (distance < closestDistance && rect.top <= 100) {
+                closestDistance = distance;
+                closestSection = section.id;
+            }
+        });
+        
+        // Update kelas active pada TOC items
+        tocItems.forEach(item => {
+            const itemId = item.getAttribute('data-id');
+            if (itemId === closestSection) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+
+    // Initialize Intersection Observer untuk mendeteksi section yang aktif
+    function initializeScrollObserver() {
+        // Hapus observer sebelumnya jika ada
+        if (observer) {
+            observer.disconnect();
+        }
+        
+        // Buat observer baru
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    const tocItem = document.querySelector(`.toc-item[data-id="${id}"]`);
+                    
+                    // Hapus active class dari semua items
+                    document.querySelectorAll('.toc-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // Tambahkan active class ke item yang sesuai
+                    if (tocItem) {
+                        tocItem.classList.add('active');
+                    }
+                }
+            });
+        }, { 
+            rootMargin: '-20% 0px -60% 0px', // Adjust these values as needed
+            threshold: 0.1
+        });
+        
+        // Observe semua heading dengan ID di section yang aktif
+        const activeSection = document.querySelector('.content-section.active');
+        if (activeSection) {
+            const headings = activeSection.querySelectorAll('h3[id]');
+            headings.forEach(heading => {
+                observer.observe(heading);
+            });
+        }
+    }
+
+    // Mobile Drawer
+    function openMobileDrawer() {
+        const overlay = document.getElementById('mobileDrawerOverlay');
+        const drawer = document.getElementById('mobileDrawer');
+        
+        overlay.classList.add('open');
+        drawer.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileDrawer() {
+        const overlay = document.getElementById('mobileDrawerOverlay');
+        const drawer = document.getElementById('mobileDrawer');
+        
+        overlay.classList.remove('open');
+        drawer.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // Code Copy Functionality
+    function copyCode(button) {
+        const codeBlock = button.closest('.code-block');
+        const codeContent = codeBlock.querySelector('pre').textContent;
+        
+        navigator.clipboard.writeText(codeContent).then(() => {
+            const icon = button.querySelector('i');
+            const text = button.querySelector('span');
+            
+            // Update button state
+            icon.setAttribute('data-lucide', 'check');
+            text.textContent = 'Copied!';
+            button.classList.add('copied');
+            
+            // Recreate icons
+            lucide.createIcons();
+            
+            // Reset after 2 seconds
+            setTimeout(() => {
+                icon.setAttribute('data-lucide', 'copy');
+                text.textContent = 'Copy';
+                button.classList.remove('copied');
+                lucide.createIcons();
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy code: ', err);
+        });
+    }
+    // Update header
+const titles = {
+    dns: 'Konfigurasi DNS (BIND9)',
+    web: 'Konfigurasi Web (Apache2)',
+    wordpress: 'Konfigurasi WordPress'
+};
+
+const subtitles = {
+    dns: 'Instalasi, konfigurasi zona forward/reverse, testing',
+    web: 'Instalasi, virtualhost, mod_rewrite, testing',
+    wordpress: 'Instalasi, kustomisasi, dan optimasi'
+};
+
+document.getElementById('contentTitle').textContent = titles[section] || titles.dns;
+document.getElementById('contentSubtitle').textContent = subtitles[section] || subtitles.dns;
+
+</script>
+<script>
+  const titles = {
+    dns: ["Konfigurasi DNS (BIND9)", "Instalasi, konfigurasi zona forward/reverse, testing"],
+    web: ["Konfigurasi Web (Apache2)", "Virtual host, SSL, rewrite, dan deployment"],
+    wordpress: ["Konfigurasi WordPress", "Instalasi & kustomisasi CMS WordPress di Ubuntu 22"]
+  };
+
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".nav-item");
+    if (!btn) return;
+    const section = btn.getAttribute("data-section");
+    if (section && titles[section]) {
+      document.getElementById("contentTitle").textContent = titles[section][0];
+      document.getElementById("contentSubtitle").textContent = titles[section][1];
+    }
+  });
+  
+// Fungsi untuk mengubah warna kursor trail berdasarkan tema
+function updateCursorColor() {
+    const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+    
+    // Warna untuk light mode (hitam dengan variasi)
+    const lightColors = ["#000000", "#111111", "#222222", "#333333", "#444444", "#555555", "#666666", "#777777"];
+    
+    // Warna untuk dark mode (putih dengan variasi)
+    const darkColors = ["#ffffff", "#eeeeee", "#dddddd", "#cccccc", "#bbbbbb", "#aaaaaa", "#999999", "#888888"];
+    
+    // Pilih warna berdasarkan tema
+    const newColors = isDarkMode ? darkColors : lightColors;
+    
+    // Update variabel colors
+    colors.splice(0, colors.length, ...newColors);
+    
+    // Terapkan warna ke circle
+    circles.forEach((circle, index) => {
+        const colorIndex = index % newColors.length;
+        circle.style.backgroundColor = newColors[colorIndex];
+        circle.style.boxShadow = `0 0 10px ${newColors[colorIndex]}, 0 0 20px ${newColors[colorIndex]}`;
+    });
+}
+
+// Panggil fungsi saat tema berubah
+document.getElementById('themeToggle').addEventListener('click', function() {
+    // Tunggu sebentar agar tema sempat berubah
+    setTimeout(updateCursorColor, 100);
+});
+
+// Panggil fungsi saat halaman dimuat
+document.addEventListener('DOMContentLoaded', function() {
+    // Tunggu sebentar agar semua elemen terload
+    setTimeout(updateCursorColor, 500);
+});
+
+// Juga panggil saat mouse bergerak (untuk memastikan)
+window.addEventListener('mousemove', updateCursorColor);
+</script><script>
+document.addEventListener("DOMContentLoaded", function () {
+  const navItems = document.querySelectorAll(".nav-item");
+  const sections = document.querySelectorAll(".content-section");
+  const title = document.querySelector(".content-title");
+
+  navItems.forEach(item => {
+    item.addEventListener("mouseenter", function () {
+      // reset semua nav dan section
+      navItems.forEach(i => i.classList.remove("active"));
+      sections.forEach(sec => sec.classList.remove("active"));
+
+      // aktifkan nav yg dihover
+      this.classList.add("active");
+      const target = this.getAttribute("data-section");
+
+      if (target === "dns") {
+        document.querySelector("#dnsContent").classList.add("active");
+        title.textContent = "Konfigurasi DNS (BIND9)";
+      } else if (target === "web") {
+        document.querySelector("#webContent").classList.add("active");
+        title.textContent = "Konfigurasi Web (Apache2)";
+      } else if (target === "wordpress") {
+        document.querySelector("#wordpressContent").classList.add("active");
+        title.textContent = "Konfigurasi WordPress";
+      }
+    });
+  });
+});
+</script>
+
+<!-- 🎵 Music Player -->
+<div class="music-player" id="musicPlayer">
+  <div class="player-content">
+    <img src="on.jpeg" alt="Cover" class="cover">
+    <div class="song-info">
+      <h4>On & On</h4>
+      <p>Cartoon, Jéja, Daniel Levi</p>
+    </div>
+    <button class="play-pause" id="playPauseBtn">▶︎</button>
+    <button class="hide-btn" id="hideBtn">▬</button>
+  </div>
+</div>
+
+<!-- 🔘 Mini Circle Player -->
+<div class="mini-player hidden" id="miniPlayer">
+  <button id="miniToggle">▶︎</button>
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<!-- Import Core -->
+<link rel="stylesheet" href="assets/core sinau.css">
+<script src="assets/core.js" defer></script>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+<div class="circle"></div>
+
+
+</body>
+</html>

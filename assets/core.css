@@ -1,0 +1,102 @@
+/* 🎵 Music Player Box */
+.music-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  background: #1c1c1e;
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+  transition: all 0.3s ease;
+  z-index: 9999;
+}
+
+.player-content {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+}
+
+.player-content .cover {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  margin-right: 12px;
+  object-fit: cover;
+}
+
+.song-info {
+  flex: 1;
+}
+
+.song-info h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.song-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #aaa;
+}
+
+.play-pause,
+.hide-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  margin-left: 8px;
+  cursor: pointer;
+}
+
+.play-pause:hover,
+.hide-btn:hover {
+  opacity: 0.7;
+}
+
+/* 🔘 Mini Player */
+.mini-player {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: #1c1c1e;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  z-index: 10000;
+}
+
+.mini-player button {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+/* 🖱️ Cursor Trail Effect */
+.circle {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background: linear-gradient(90deg, #547ced, #627beb, #6d79e9, #7878e7, #8177e4, #8a75e1, #9274de, #9973db);
+  pointer-events: none;
+  transition: opacity 0.5s ease; /* biar pas ilang smooth */
+}

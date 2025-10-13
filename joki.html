@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Platform terbaik untuk top up game, joki boosting, dan merchandise gaming">
+    <meta property="og:title" content="GameStoreID - Marketplace Gaming Terlengkap">
+    <title>GameStoreID - Marketplace Gaming Terlengkap</title>
+    <style>
+        :root {
+            --primary: #6C5CE7;
+            --primary-dark: #5649c9;
+            --secondary: #FBC531;
+            --dark: #2D3436;
+            --light: #ECF0F1;
+            --gray: #636E72;
+            --success: #00B894;
+            --danger: #D63031;
+            --warning: #FDCB6E;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            color: var(--gray);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: transparent;
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .login-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Hero Banner */
+        .hero {
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--radius);
+            height: 400px;
+        }
+
+        .hero-slider {
+            display: flex;
+            transition: transform 0.5s ease;
+            height: 100%;
+        }
+
+        .hero-slide {
+            min-width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+            position: relative;
+        }
+
+        .hero-slide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3));
+        }
+
+        .hero-content {
+            max-width: 500px;
+            z-index: 1;
+            color: white;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+
+        .cta-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 12px 25px;
+            border-radius: var(--radius);
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: var(--transition);
+        }
+
+        .cta-btn:hover {
+            background-color: #e6b301;
+        }
+
+        .hero-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 2;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .hero-nav:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .hero-prev {
+            left: 15px;
+        }
+
+        .hero-next {
+            right: 15px;
+        }
+
+        /* Category Filter */
+        .category-filter {
+            margin: 30px 0;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .filter-list {
+            display: flex;
+            gap: 15px;
+            list-style: none;
+            padding: 5px 0;
+        }
+
+        .filter-item {
+            padding: 8px 20px;
+            background-color: white;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .filter-item:hover:not(.active) {
+            background-color: #f1f2f6;
+        }
+
+        /* Product Grid */
+        .section-title {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .product-content {
+            padding: 15px;
+        }
+
+        .product-category {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .current-price {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .discount-badge {
+            background-color: var(--danger);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .product-stock {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .in-stock {
+            color: var(--success);
+        }
+
+        .low-stock {
+            color: var(--warning);
+        }
+
+        .out-of-stock {
+            color: var(--danger);
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .add-to-cart-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .load-more {
+            display: block;
+            margin: 30px auto 50px;
+            padding: 12px 30px;
+            background-color: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .load-more:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Boosting Services */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .service-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .service-desc {
+            margin-bottom: 15px;
+            color: var(--gray);
+        }
+
+        .service-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .service-eta, .service-price {
+            font-weight: 500;
+        }
+
+        .service-price {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .order-boost-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .order-boost-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Merch Section */
+        .merch-options {
+            margin: 15px 0;
+        }
+
+        .option-group {
+            margin-bottom: 10px;
+        }
+
+        .option-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .option-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #f1f2f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .qty-input {
+            width: 50px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: white;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            font-size: 1.5rem;
+            color: var(--gray);
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            font-size: 1rem;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Cart Modal */
+        .cart-items {
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            margin-right: 15px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+        }
+
+        .cart-item-title {
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .cart-item-remove {
+            background: transparent;
+            color: var(--danger);
+            font-size: 1.2rem;
+        }
+
+        .cart-summary {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--radius);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .summary-total {
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .voucher-input {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .voucher-input .form-input {
+            flex: 1;
+        }
+
+        .apply-voucher {
+            padding: 0 15px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: var(--radius);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            background-color: var(--success);
+            color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background-color: var(--danger);
+        }
+
+        /* Skeleton Loader */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+            border-radius: var(--radius);
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton-card {
+            height: 320px;
+            border-radius: var(--radius);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-wrap: wrap;
+            }
+            
+            .logo {
+                order: 1;
+            }
+            
+            .search-bar {
+                order: 3;
+                max-width: 100%;
+                margin: 15px 0 0;
+            }
+            
+            .header-actions {
+                order: 2;
+            }
+            
+            .hero {
+                height: 300px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-desc {
+                font-size: 1rem;
+            }
+            
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                height: 250px;
+            }
+            
+            .hero-content {
+                padding: 0 20px;
+            }
+            
+            .hero-title {
+                font-size: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-list {
+                gap: 10px;
+            }
+            
+            .filter-item {
+                padding: 6px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="10" width="80" height="80" rx="15" fill="#6C5CE7"/>
+                    <circle cx="35" cy="35" r="10" fill="white"/>
+                    <circle cx="65" cy="35" r="10" fill="white"/>
+                    <path d="M25 65 Q50 80 75 65" stroke="white" stroke-width="5" fill="none"/>
+                </svg>
+                <span class="logo-text">GameStoreID</span>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Cari game, voucher, atau merchandise...">
+                <button class="search-btn">🔍</button>
+            </div>
+            
+            <div class="header-actions">
+                <button class="cart-btn" aria-label="Keranjang Belanja">
+                    🛒
+                    <span class="cart-badge">0</span>
+                </button>
+                <button class="login-btn">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Banner -->
+        <section class="hero">
+            <div class="hero-slider">
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="hero-content">
+                        <h2 class="hero-title">Top Up Game Credits</h2>
+                        <p class="hero-desc">Dapatkan promo spesial untuk pembelian credit game favoritmu. Murah, cepat, dan aman!</p>
+                        <button class="cta-btn">Top Up Sekarang</button>
+                    </div>
+                </div>
+                <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');">
+                    <div class="hero-content">
+                        <h2 class="hero-title">Joki Boosting Profesional</h2>
+                        <p class="hero-desc">Tingkatkan rank dan skillmu dengan jasa boosting dari player profesional.</p>
+                        <button class="cta-btn">Pesan Sekarang</button>
+                    </div>
+                </div>
+            </div>
+            <button class="hero-nav hero-prev">❮</button>
+            <button class="hero-nav hero-next">❯</button>
+        </section>
+
+        <!-- Category Filter -->
+        <section class="category-filter">
+            <ul class="filter-list">
+                <li class="filter-item active" data-filter="all">Semua</li>
+                <li class="filter-item" data-filter="popular">Populer</li>
+                <li class="filter-item" data-filter="topup">Top Up</li>
+                <li class="filter-item" data-filter="boost">Boosting</li>
+                <li class="filter-item" data-filter="merch">Merchandise</li>
+                <li class="filter-item" data-filter="voucher">Voucher</li>
+                <li class="filter-item" data-filter="credit">Pulsa</li>
+                <li class="filter-item" data-filter="entertainment">Hiburan</li>
+            </ul>
+        </section>
+
+        <!-- Product Grid -->
+        <section>
+            <h2 class="section-title">Produk Populer</h2>
+            <div class="product-grid" id="product-grid">
+                <!-- Products will be populated by JavaScript -->
+            </div>
+            <button class="load-more">Muat Lebih Banyak</button>
+        </section>
+
+        <!-- Boosting Services Section -->
+        <section>
+            <h2 class="section-title">Layanan Boosting</h2>
+            <div class="services-grid" id="services-grid">
+                <!-- Services will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Merch Section -->
+        <section>
+            <h2 class="section-title">Merchandise Gaming</h2>
+            <div class="product-grid" id="merch-grid">
+                <!-- Merch will be populated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Cart & Checkout Modal -->
+    <div class="modal-overlay" id="cart-modal">
+        <div class="modal">
+            <button class="modal-close" aria-label="Tutup">×</button>
+            <h2 class="modal-title">Keranjang Belanja</h2>
+            
+            <div class="cart-items" id="cart-items">
+                <!-- Cart items will be populated by JavaScript -->
+            </div>
+            
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal">Rp 0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Pengiriman</span>
+                    <span id="cart-shipping">Rp 0</span>
+                </div>
+                <div class="summary-row summary-total">
+                    <span>Total</span>
+                    <span id="cart-total">Rp 0</span>
+                </div>
+            </div>
+            
+            <div class="voucher-input">
+                <input type="text" class="form-input" placeholder="Kode voucher">
+                <button class="apply-voucher">Terapkan</button>
+            </div>
+            
+            <button class="submit-btn" id="checkout-btn">Lanjut ke Checkout</button>
+        </div>
+    </div>
+
+    <!-- Checkout Form Modal -->
+    <div class="modal-overlay" id="checkout-modal">
+        <div class="modal">
+            <button class="modal-close" aria-label="Tutup">×</button>
+            <h2 class="modal-title">Checkout</h2>
+            
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label class="form-label" for="name">Nama Lengkap</label>
+                    <input type="text" class="form-input" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" class="form-input" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="phone">Nomor Telepon</label>
+                    <input type="tel" class="form-input" id="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="address">Alamat</label>
+                    <textarea class="form-input form-textarea" id="address" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Metode Pembayaran</label>
+                    <select class="form-input" id="payment-method" required>
+                        <option value="">Pilih metode pembayaran</option>
+                        <option value="bank_transfer">Transfer Bank</option>
+                        <option value="credit_card">Kartu Kredit</option>
+                        <option value="gopay">Gopay</option>
+                        <option value="ovo">OVO</option>
+                        <option value="dana">DANA</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="submit-btn">Buat Pesanan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Boosting Order Modal -->
+    <div class="modal-overlay" id="boost-modal">
+        <div class="modal">
+            <button class="modal-close" aria-label="Tutup">×</button>
+            <h2 class="modal-title">Pesan Layanan Boosting</h2>
+            
+            <form id="boost-form">
+                <input type="hidden" id="boost-service-id">
+                
+                <div class="form-group">
+                    <label class="form-label" for="username">Username Game</label>
+                    <input type="text" class="form-input" id="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="server">Server</label>
+                    <input type="text" class="form-input" id="server" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="notes">Catatan (opsional)</label>
+                    <textarea class="form-input form-textarea" id="notes"></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">Pesan Sekarang</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Mock Data
+        const PRODUCTS = [
+            {
+                id: 1,
+                title: "Mobile Legends Diamonds",
+                category: "Top Up",
+                type: "topup",
+                price: 15000,
+                originalPrice: 20000,
+                discount: 25,
+                stock: 100,
+                image: "https://images.unsplash.com/photo-1614294149710-32eec425a251?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["popular", "topup", "mobile"]
+            },
+            {
+                id: 2,
+                title: "PUBG UC Unknown Cash",
+                category: "Top Up",
+                type: "topup",
+                price: 25000,
+                originalPrice: 30000,
+                discount: 17,
+                stock: 50,
+                image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["popular", "topup", "pc"]
+            },
+            {
+                id: 3,
+                title: "Genshin Impact Genesis Crystals",
+                category: "Top Up",
+                type: "topup",
+                price: 100000,
+                originalPrice: 120000,
+                discount: 17,
+                stock: 30,
+                image: "https://images.unsplash.com/photo-1635863138275-d9b33299680a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["popular", "topup", "pc", "mobile"]
+            },
+            {
+                id: 4,
+                title: "Valorant Points",
+                category: "Top Up",
+                type: "topup",
+                price: 125000,
+                originalPrice: 150000,
+                discount: 17,
+                stock: 75,
+                image: "https://images.unsplash.com/photo-1598550476439-6847785b6b2a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["topup", "pc"]
+            },
+            {
+                id: 5,
+                title: "Free Fire Diamonds",
+                category: "Top Up",
+                type: "topup",
+                price: 14000,
+                originalPrice: 20000,
+                discount: 30,
+                stock: 200,
+                image: "https://images.unsplash.com/photo-1618767648395-08e4c5d51463?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["popular", "topup", "mobile"]
+            },
+            {
+                id: 6,
+                title: "T-Shirt Game Merch",
+                category: "Merchandise",
+                type: "merch",
+                price: 120000,
+                originalPrice: 150000,
+                discount: 20,
+                stock: 15,
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["merch", "clothing"],
+                sizes: ["S", "M", "L", "XL"]
+            },
+            {
+                id: 7,
+                title: "Gaming Mousepad",
+                category: "Merchandise",
+                type: "merch",
+                price: 75000,
+                originalPrice: 100000,
+                discount: 25,
+                stock: 25,
+                image: "https://images.unsplash.com/photo-1625472603517-1b0dc72846ab?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["merch", "accessories"]
+            },
+            {
+                id: 8,
+                title: "Gaming Headset",
+                category: "Merchandise",
+                type: "merch",
+                price: 350000,
+                originalPrice: 500000,
+                discount: 30,
+                stock: 10,
+                image: "https://images.unsplash.com/photo-1599669454699-248893623464?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["merch", "accessories", "popular"]
+            },
+            {
+                id: 9,
+                title: "Voucher Google Play",
+                category: "Voucher",
+                type: "voucher",
+                price: 100000,
+                originalPrice: 100000,
+                discount: 0,
+                stock: 100,
+                image: "https://images.unsplash.com/photo-1600080972464-8e5f35f63d08?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["voucher", "entertainment"]
+            },
+            {
+                id: 10,
+                title: "Pulsa Telkomsel",
+                category: "Pulsa",
+                type: "credit",
+                price: 50000,
+                originalPrice: 50000,
+                discount: 0,
+                stock: 500,
+                image: "https://images.unsplash.com/photo-1610041321320-42aae3e67cce?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
+                tags: ["credit", "popular"]
+            }
+        ];
+
+        const SERVICES = [
+            {
+                id: 101,
+                title: "Rank Push Mobile Legends",
+                description: "Layanan joki rank Mobile Legends hingga tier tertinggi dengan winrate terjamin",
+                eta: "2-3 Hari",
+                price: 100000,
+                game: "Mobile Legends"
+            },
+            {
+                id: 102,
+                title: "Win Boost PUBG Mobile",
+                description: "Tingkatkan jumlah winner dan K/D ratio di PUBG Mobile dengan bantuan pro player",
+                eta: "1-2 Hari",
+                price: 75000,
+                game: "PUBG Mobile"
+            },
+            {
+                id: 103,
+                title: "Valorant Rank Boost",
+                description: "Naikkan rank Valorant dengan aman dan cepat tanpa risiko banned",
+                eta: "3-4 Hari",
+                price: 150000,
+                game: "Valorant"
+            },
+            {
+                id: 104,
+                title: "Genshin Impact Spiral Abyss",
+                description: "Bantu clear Spiral Abyss hingga 36 stars dengan karakter yang dimiliki",
+                eta: "1 Hari",
+                price: 50000,
+                game: "Genshin Impact"
+            },
+            {
+                id: 105,
+                title: "Coaching Session Dota 2",
+                description: "Private coaching session dengan player tier immortal untuk meningkatkan skill bermain",
+                eta: "2 Jam",
+                price: 200000,
+                game: "Dota 2"
+            }
+        ];
+
+        // I18N for Indonesian localization
+        const I18N = {
+            locale: 'id',
+            strings: {
+                addToCart: 'Tambah ke Keranjang',
+                outOfStock: 'Stok Habis',
+                lowStock: 'Stok Terbatas',
+                inStock: 'Tersedia',
+                orderBoost: 'Pesan Boost',
+                checkout: 'Checkout',
+                subtotal: 'Subtotal',
+                shipping: 'Pengiriman',
+                total: 'Total',
+                applyVoucher: 'Terapkan Voucher',
+                proceedToCheckout: 'Lanjut ke Checkout',
+                fullName: 'Nama Lengkap',
+                email: 'Email',
+                phone: 'Nomor Telepon',
+                address: 'Alamat',
+                paymentMethod: 'Metode Pembayaran',
+                placeOrder: 'Buat Pesanan',
+                gameUsername: 'Username Game',
+                server: 'Server',
+                notes: 'Catatan (opsional)',
+                orderNow: 'Pesan Sekarang',
+                addedToCart: 'Ditambahkan ke keranjang',
+                orderPlaced: 'Pesanan berhasil dibuat',
+                boostOrdered: 'Layanan boosting dipesan'
+            }
+        };
+
+        // Example SQL Schema (for backend integration)
+        /*
+        -- Products table
+        CREATE TABLE products (
+          id INT PRIMARY KEY AUTO_INCREMENT,
+          title VARCHAR(255),
+          type ENUM('topup','boost','merch','voucher','credit'),
+          category VARCHAR(100),
+          price DECIMAL(10,2),
+          discount DECIMAL(10,2),
+          stock INT,
+          img_url VARCHAR(255),
+          tags TEXT
+        );
+
+        -- Orders table
+        CREATE TABLE orders (
+          id INT PRIMARY KEY AUTO_INCREMENT,
+          user_id INT,
+          items JSON,
+          total DECIMAL(10,2),
+          payment_method VARCHAR(100),
+          status VARCHAR(50),
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        -- Users table
+        CREATE TABLE users (
+          id INT PRIMARY KEY AUTO_INCREMENT,
+          name VARCHAR(255),
+          email VARCHAR(255),
+          phone VARCHAR(50),
+          address TEXT
+        );
+        */
+
+        // State Management
+        let cart = [];
+        let currentFilter = 'all';
+        let currentSlide = 0;
+        let searchTimeout = null;
+
+        // DOM Elements
+        const productGrid = document.getElementById('product-grid');
+        const servicesGrid = document.getElementById('services-grid');
+        const merchGrid = document.getElementById('merch-grid');
+        const cartItems = document.getElementById('cart-items');
+        const cartBadge = document.querySelector('.cart-badge');
+        const cartSubtotal = document.getElementById('cart-subtotal');
+        const cartShipping = document.getElementById('cart-shipping');
+        const cartTotal = document.getElementById('cart-total');
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const cartModal = document.getElementById('cart-modal');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const boostModal = document.getElementById('boost-modal');
+        const toast = document.getElementById('toast');
+        const filterItems = document.querySelectorAll('.filter-item');
+        const searchInput = document.querySelector('.search-input');
+        const heroSlider = document.querySelector('.hero-slider');
+        const heroPrev = document.querySelector('.hero-prev');
+        const heroNext = document.querySelector('.hero-next');
+
+        // Initialize the application
+        function init() {
+            renderProducts();
+            renderServices();
+            renderMerch();
+            setupEventListeners();
+            startHeroSlider();
+        }
+
+        // Render products to the grid
+        function renderProducts() {
+            productGrid.innerHTML = '';
+            
+            const filteredProducts = filterProducts(PRODUCTS, currentFilter);
+            
+            if (filteredProducts.length === 0) {
+                productGrid.innerHTML = '<p class="no-products">Tidak ada produk yang ditemukan</p>';
+                return;
+            }
+            
+            filteredProducts.forEach(product => {
+                const productCard = createProductCard(product);
+                productGrid.appendChild(productCard);
+            });
+        }
+
+        // Render boosting services
+        function renderServices() {
+            servicesGrid.innerHTML = '';
+            
+            SERVICES.forEach(service => {
+                const serviceCard = document.createElement('div');
+                serviceCard.className = 'service-card';
+                serviceCard.innerHTML = `
+                    <h3 class="service-title">${service.title}</h3>
+                    <p class="service-desc">${service.description}</p>
+                    <div class="service-meta">
+                        <span class="service-eta">ETA: ${service.eta}</span>
+                        <span class="service-price">Rp ${service.price.toLocaleString('id-ID')}</span>
+                    </div>
+                    <button class="order-boost-btn" data-id="${service.id}">${I18N.strings.orderBoost}</button>
+                `;
+                servicesGrid.appendChild(serviceCard);
+            });
+        }
+
+        // Render merchandise
+        function renderMerch() {
+            merchGrid.innerHTML = '';
+            
+            const merchProducts = PRODUCTS.filter(product => product.type === 'merch');
+            
+            merchProducts.forEach(product => {
+                const merchCard = createProductCard(product, true);
+                merchGrid.appendChild(merchCard);
+            });
+        }
+
+        // Create product card element
+        function createProductCard(product, isMerch = false) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.setAttribute('data-id', product.id);
+            card.setAttribute('data-type', product.type);
+            card.setAttribute('data-price', product.price);
+            card.setAttribute('data-stock', product.stock);
+            
+            let stockText = '';
+            let stockClass = '';
+            
+            if (product.stock === 0) {
+                stockText = I18N.strings.outOfStock;
+                stockClass = 'out-of-stock';
+            } else if (product.stock < 10) {
+                stockText = `${I18N.strings.lowStock} (${product.stock})`;
+                stockClass = 'low-stock';
+            } else {
+                stockText = I18N.strings.inStock;
+                stockClass = 'in-stock';
+            }
+            
+            let optionsHTML = '';
+            if (isMerch && product.sizes) {
+                optionsHTML = `
+                    <div class="merch-options">
+                        <div class="option-group">
+                            <label class="option-label">Ukuran:</label>
+                            <select class="option-select" name="size">
+                                ${product.sizes.map(size => `<option value="${size}">${size}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="option-group">
+                            <label class="option-label">Jumlah:</label>
+                            <div class="quantity-selector">
+                                <button type="button" class="qty-btn minus">-</button>
+                                <input type="number" class="qty-input" name="quantity" value="1" min="1" max="${product.stock}">
+                                <button type="button" class="qty-btn plus">+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            card.innerHTML = `
+                <img src="${product.image}" alt="${product.title}" class="product-img">
+                <div class="product-content">
+                    <div class="product-category">${product.category}</div>
+                    <h3 class="product-title">${product.title}</h3>
+                    <div class="product-price">
+                        <span class="current-price">Rp ${product.price.toLocaleString('id-ID')}</span>
+                        ${product.discount > 0 ? `
+                            <span class="original-price">Rp ${product.originalPrice.toLocaleString('id-ID')}</span>
+                            <span class="discount-badge">-${product.discount}%</span>
+                        ` : ''}
+                    </div>
+                    <div class="product-stock ${stockClass}">${stockText}</div>
+                    ${optionsHTML}
+                    <button class="add-to-cart-btn" ${product.stock === 0 ? 'disabled' : ''}>
+                        ${I18N.strings.addToCart}
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Filter products based on current filter
+        function filterProducts(products, filter) {
+            if (filter === 'all') return products;
+            
+            if (filter === 'popular') {
+                return products.filter(product => product.tags.includes('popular'));
+            }
+            
+            return products.filter(product => product.type === filter || product.tags.includes(filter));
+        }
+
+        // Update cart UI
+        function updateCart() {
+            cartItems.innerHTML = '';
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p class="empty-cart">Keranjang belanja kosong</p>';
+                cartSubtotal.textContent = 'Rp 0';
+                cartShipping.textContent = 'Rp 0';
+                cartTotal.textContent = 'Rp 0';
+                cartBadge.textContent = '0';
+                return;
+            }
+            
+            let subtotal = 0;
+            
+            cart.forEach(item => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}" class="cart-item-img">
+                    <div class="cart-item-details">
+                        <h4 class="cart-item-title">${item.title}</h4>
+                        <div class="cart-item-price">Rp ${item.price.toLocaleString('id-ID')} x ${item.quantity}</div>
+                    </div>
+                    <button class="cart-item-remove" data-id="${item.id}">×</button>
+                `;
+                cartItems.appendChild(cartItem);
+                
+                subtotal += item.price * item.quantity;
+            });
+            
+            const shipping = subtotal > 0 ? 10000 : 0;
+            const total = subtotal + shipping;
+            
+            cartSubtotal.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+            cartShipping.textContent = `Rp ${shipping.toLocaleString('id-ID')}`;
+            cartTotal.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            cartBadge.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
+        // Add item to cart
+        function addToCart(productId, quantity = 1, options = {}) {
+            const product = PRODUCTS.find(p => p.id === productId);
+            
+            if (!product) return;
+            
+            // Check if product already in cart
+            const existingItemIndex = cart.findIndex(item => 
+                item.id === productId && 
+                JSON.stringify(item.options) === JSON.stringify(options)
+            );
+            
+            if (existingItemIndex >= 0) {
+                // Update quantity if already in cart
+                cart[existingItemIndex].quantity += quantity;
+            } else {
+                // Add new item to cart
+                cart.push({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    image: product.image,
+                    quantity,
+                    options
+                });
+            }
+            
+            updateCart();
+            showToast(`${product.title} ${I18N.strings.addedToCart}`);
+        }
+
+        // Remove item from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCart();
+        }
+
+        // Show toast notification
+        function showToast(message, isError = false) {
+            toast.textContent = message;
+            toast.className = isError ? 'toast error' : 'toast';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Filter items
+            filterItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    filterItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    currentFilter = item.getAttribute('data-filter');
+                    renderProducts();
+                });
+            });
+            
+            // Search with debounce
+            searchInput.addEventListener('input', () => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    // TODO: Implement search functionality
+                    console.log('Searching for:', searchTerm);
+                }, 300);
+            });
+            
+            // Add to cart buttons
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-to-cart-btn')) {
+                    const productCard = e.target.closest('.product-card');
+                    const productId = parseInt(productCard.getAttribute('data-id'));
+                    
+                    let quantity = 1;
+                    let options = {};
+                    
+                    // Check if it's a merch product with options
+                    const sizeSelect = productCard.querySelector('select[name="size"]');
+                    const quantityInput = productCard.querySelector('input[name="quantity"]');
+                    
+                    if (sizeSelect && quantityInput) {
+                        options.size = sizeSelect.value;
+                        quantity = parseInt(quantityInput.value);
+                    }
+                    
+                    addToCart(productId, quantity, options);
+                }
+                
+                // Remove from cart
+                if (e.target.classList.contains('cart-item-remove')) {
+                    const productId = parseInt(e.target.getAttribute('data-id'));
+                    removeFromCart(productId);
+                }
+                
+                // Order boost buttons
+                if (e.target.classList.contains('order-boost-btn')) {
+                    const serviceId = parseInt(e.target.getAttribute('data-id'));
+                    openBoostModal(serviceId);
+                }
+                
+                // Quantity buttons
+                if (e.target.classList.contains('qty-btn')) {
+                    const quantityInput = e.target.parentElement.querySelector('.qty-input');
+                    let quantity = parseInt(quantityInput.value);
+                    
+                    if (e.target.classList.contains('plus')) {
+                        quantityInput.value = Math.min(quantity + 1, parseInt(quantityInput.max));
+                    } else if (e.target.classList.contains('minus')) {
+                        quantityInput.value = Math.max(quantity - 1, parseInt(quantityInput.min));
+                    }
+                }
+            });
+            
+            // Cart button
+            document.querySelector('.cart-btn').addEventListener('click', () => {
+                cartModal.classList.add('active');
+            });
+            
+            // Checkout button
+            checkoutBtn.addEventListener('click', () => {
+                cartModal.classList.remove('active');
+                checkoutModal.classList.add('active');
+            });
+            
+            // Checkout form submission
+            document.getElementById('checkout-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Client-side validation
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const address = document.getElementById('address').value;
+                const paymentMethod = document.getElementById('payment-method').value;
+                
+                if (!name || !email || !phone || !address || !paymentMethod) {
+                    showToast('Harap isi semua field yang diperlukan', true);
+                    return;
+                }
+                
+                // Prepare checkout data
+                const checkoutData = {
+                    customer: { name, email, phone, address },
+                    items: cart,
+                    paymentMethod,
+                    total: calculateTotal()
+                };
+                
+                console.log('Checkout data:', checkoutData);
+                
+                // TODO: CONNECT TO BACKEND HERE
+                /*
+                fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'X-CSRF-Token': 'YOUR_CSRF_TOKEN' // Add CSRF token for security
+                    },
+                    body: JSON.stringify(checkoutData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(I18N.strings.orderPlaced);
+                        cart = [];
+                        updateCart();
+                        checkoutModal.classList.remove('active');
+                    } else {
+                        showToast('Checkout gagal: ' + data.message, true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Terjadi kesalahan saat checkout', true);
+                });
+                */
+                
+                // For demo purposes, simulate successful checkout
+                showToast(I18N.strings.orderPlaced);
+                cart = [];
+                updateCart();
+                checkoutModal.classList.remove('active');
+            });
+            
+            // Boost form submission
+            document.getElementById('boost-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const serviceId = parseInt(document.getElementById('boost-service-id').value);
+                const username = document.getElementById('username').value;
+                const server = document.getElementById('server').value;
+                const notes = document.getElementById('notes').value;
+                
+                if (!username || !server) {
+                    showToast('Harap isi username dan server', true);
+                    return;
+                }
+                
+                const service = SERVICES.find(s => s.id === serviceId);
+                
+                const boostOrder = {
+                    serviceId,
+                    service: service.title,
+                    username,
+                    server,
+                    notes,
+                    price: service.price
+                };
+                
+                console.log('Boost order:', boostOrder);
+                
+                // TODO: CONNECT TO BACKEND HERE
+                /*
+                fetch('/api/book-boost', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'X-CSRF-Token': 'YOUR_CSRF_TOKEN' // Add CSRF token for security
+                    },
+                    body: JSON.stringify(boostOrder)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast(I18N.strings.boostOrdered);
+                        boostModal.classList.remove('active');
+                        document.getElementById('boost-form').reset();
+                    } else {
+                        showToast('Pemesanan boost gagal: ' + data.message, true);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showToast('Terjadi kesalahan saat memesan boost', true);
+                });
+                */
+                
+                // For demo purposes, simulate successful boost order
+                showToast(I18N.strings.boostOrdered);
+                boostModal.classList.remove('active');
+                document.getElementById('boost-form').reset();
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.modal-close').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.modal-overlay').forEach(modal => {
+                        modal.classList.remove('active');
+                    });
+                });
+            });
+            
+            // Close modal when clicking outside
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Load more button
+            document.querySelector('.load-more').addEventListener('click', () => {
+                // TODO: Implement load more functionality
+                showToast('Fitur "Muat Lebih Banyak" akan datang!');
+            });
+        }
+
+        // Calculate total for checkout
+        function calculateTotal() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shipping = subtotal > 0 ? 10000 : 0;
+            return subtotal + shipping;
+        }
+
+        // Open boost modal with service details
+        function openBoostModal(serviceId) {
+            const service = SERVICES.find(s => s.id === serviceId);
+            
+            if (!service) return;
+            
+            document.getElementById('boost-service-id').value = serviceId;
+            boostModal.classList.add('active');
+        }
+
+        // Hero slider functionality
+        function startHeroSlider() {
+            heroPrev.addEventListener('click', () => {
+                currentSlide = currentSlide === 0 ? 1 : 0;
+                updateHeroSlider();
+            });
+            
+            heroNext.addEventListener('click', () => {
+                currentSlide = currentSlide === 1 ? 0 : 1;
+                updateHeroSlider();
+            });
+            
+            // Auto slide every 5 seconds
+            setInterval(() => {
+                currentSlide = currentSlide === 1 ? 0 : 1;
+                updateHeroSlider();
+            }, 5000);
+        }
+
+        function updateHeroSlider() {
+            heroSlider.style.transform = `translateX(-${currentSlide * 100}%)`;
+        }
+
+        // Testing helper - seed cart with sample items
+        function seedCartWithSample() {
+            addToCart(1, 2);
+            addToCart(6, 1, { size: 'L' });
+            addToCart(8, 1);
+            showToast('Keranjang diisi dengan contoh item untuk testing');
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
